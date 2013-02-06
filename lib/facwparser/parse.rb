@@ -16,7 +16,6 @@ module Facwparser
       p = nil
 
       # TODO:
-      # list
       # table
       # macro: toc, code, pagetree, noformat, jira
       lines.each { |l|
@@ -30,6 +29,12 @@ module Facwparser
         when /\A([*\-#]+)\s+(.+)\z/
           p = nil
           elements << Element::ListItem.new(l, $1, $2)
+        when /\A\|\|.+\|\|\s*\z/
+          p = nil
+          elements << Element::TableHeaders.new(l)
+        when /\A\|.+\|\s*\z/
+          p = nil
+          elements << Element::TableData.new(l)
         when /\A\s*\z/
           p = nil
         when /\A(.+)\z/

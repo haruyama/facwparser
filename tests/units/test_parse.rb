@@ -88,4 +88,22 @@ EOS
 
   end
 
+  def test_parse1_table
+    source =<<EOS
+1
+||2||3||
+|4|5|
+6
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1"),
+        Facwparser::Element::TableHeaders.new('||2||3||'),
+        Facwparser::Element::TableData.new('|4|5|'),
+        Facwparser::Element::P.new("6"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
 end

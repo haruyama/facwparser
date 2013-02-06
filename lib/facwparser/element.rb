@@ -24,9 +24,6 @@ module Facwparser
         @level = level
         @content = content
       end
-      def ==(other)
-        super(other) && self.level == other.level && self.content == other.content
-      end
     end
     class ListItem < ElementBase
       attr_reader :type, :level, :content
@@ -36,8 +33,19 @@ module Facwparser
         @level   = symbols.size
         @content = content
       end
-      def ==(other)
-        super(other) && self.type == other.type && self.level == other.level && self.content == other.content
+    end
+    class TableHeaders < ElementBase
+      attr_reader :elements
+      def initialize(source)
+        super(source)
+        @elements = source.split('||')[1..-2]
+      end
+    end
+    class TableData < ElementBase
+      attr_reader :elements
+      def initialize(source)
+        super(source)
+        @elements = source.split('|')[1..-2]
       end
     end
   end
