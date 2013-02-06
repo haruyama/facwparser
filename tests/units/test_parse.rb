@@ -43,4 +43,27 @@ EOS
 
   end
 
+  def test_parse1_horizontal_rule
+    source =<<EOS
+1
+----
+2
+---
+3
+
+-----
+4
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::HorizontalRule.new("----\n"),
+        Facwparser::Element::P.new("2\n---\n3\n"),
+        Facwparser::Element::HorizontalRule.new("-----\n"),
+        Facwparser::Element::P.new("4\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
 end

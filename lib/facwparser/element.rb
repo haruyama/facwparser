@@ -15,6 +15,8 @@ module Facwparser
         @source += source
       end
     end
+    class HorizontalRule < ElementBase
+    end
     class Heading < ElementBase
       attr_reader :level, :content
       def initialize(source, level, content)

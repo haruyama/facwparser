@@ -23,7 +23,10 @@ module Facwparser
         when s.scan(/h(\d)\.\s+(.+)\n/)
           p = nil
           elements << Element::Heading.new(s[0], s[1].to_i, s[2])
-        when s.scan(/.+\n/)
+        when s.scan(/----+\n/)
+          p = nil
+          elements << Element::HorizontalRule.new(s[0])
+        when s.scan(/(.+)\n/)
           if p
             p.append(s[0])
           else
