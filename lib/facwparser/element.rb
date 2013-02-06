@@ -51,6 +51,29 @@ module Facwparser
     class MacroBase < ElementBase
     end
     class TocMacro < MacroBase
+      def initialize(source, options = nil)
+        super(source)
+        @options = options
+      end
+    end
+    class PagetreeMacro < MacroBase
+      def initialize(source, options = nil)
+        super(source)
+        @options = options
+      end
+    end
+    class NoformatMacro < MacroBase
+      def initialize(source, content)
+        super(source)
+        @content = content
+      end
+    end
+    class CodeMacro < MacroBase
+      def initialize(source, options, content)
+        super(source)
+        @options = options
+        @content = content
+      end
     end
   end
 end

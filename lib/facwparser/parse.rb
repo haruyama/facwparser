@@ -17,17 +17,15 @@ module Facwparser
 
       p = nil
 
-      # TODO:
-      # macro: code, pagetree, noformat
       while s.rest?
         case
-        when s.scan(/h(\d)\.[ \t\v]+(.+?)\n/)
+        when s.scan(/h(\d)\.[ \t\v]+(.+)\n/)
           p = nil
           elements << Element::Heading.new(s[0], s[1].to_i, s[2])
-        when s.scan(/----+?\n/)
+        when s.scan(/----+\n/)
           p = nil
           elements << Element::HorizontalRule.new(s[0])
-        when s.scan(/([*\-#]+)[ \t\v]+(.+?)\n/)
+        when s.scan(/([*\-#]+)[ \t\v]+(.+)\n/)
           p = nil
           elements << Element::ListItem.new(s[0], [1], s[2])
         when s.scan(/\|\|.+\|\|\s*?\n/)
@@ -36,12 +34,21 @@ module Facwparser
         when s.scan(/\|.+\|\s*?\n/)
           p = nil
           elements << Element::TableData.new(s[0])
-        when s.scan(/\{toc(\:.*?)?\}\s*?\n/)
+        when s.scan(/\{toc(:.*)?\}\s*?\n/)
           p = nil
-          elements << Element::TocMacro.new(s[0])
+          elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
+        when s.scan(/\{pagetree(:.*)?\}\s*?\n/)
+          p = nil
+          elements << Element::PagetreeMacro.new(s[0], s[1] ? s[1][1,] : nil)
+        when s.scan(/\{noformat\}\s*?\n(.+?\n)\{noformat\}\s*?\n/m)
+          p = nil
+          elements << Element::NoformatMacro.new(s[0], s[1])
+        when s.scan(/\{code(:.*?)?\}\s*?\n(.+?\n)\{code\}\s*?\n/m)
+          p = nil
+          elements << Element::CodeMacro.new(s[0], s[1], s[2])
         when s.scan(/\s*?\n/)
           p = nil
-        when s.scan(/(.+?)\n/)
+        when s.scan(/(.+)\n/)
           if p
             p.append(s[0])
           else

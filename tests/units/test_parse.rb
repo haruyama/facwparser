@@ -125,14 +125,68 @@ EOS
   def test_parse1_toc_2
     source =<<EOS
 1
-{toc:max_level=3}
+{toc:maxLevel=3}
 2
 EOS
     assert_equal(
       [
         Facwparser::Element::P.new("1\n"),
-        Facwparser::Element::TocMacro.new("{toc:max_level=3}\n"),
+        Facwparser::Element::TocMacro.new("{toc:maxLevel=3}\n", 'maxLevel=3'),
         Facwparser::Element::P.new("2\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_pagetree
+    source =<<EOS
+1
+{pagetree:root=@self}
+2
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::PagetreeMacro.new("{pagetree:root=@self}\n", 'root=@self'),
+        Facwparser::Element::P.new("2\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_noformat
+    source =<<EOS
+1
+{noformat}
+2
+3
+{noformat}
+4
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::NoformatMacro.new("{noformat}\n2\n3\n{noformat}\n", "2\n3\n"),
+        Facwparser::Element::P.new("4\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_code
+    source =<<EOS
+1
+{code:ruby}
+a = 1 + 2
+3
+{code}
+4
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::CodeMacro.new("{code:ruby}\na = 1 + 2\n3\n{code}\n", 'ruby', "a = 1 + 2\n3\n"),
+        Facwparser::Element::P.new("4\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
