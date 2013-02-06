@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 
 require File.dirname(__FILE__) + '/element'
-require 'strscan'
 
 module Facwparser
   module Parse
@@ -10,34 +9,48 @@ module Facwparser
     end
 
     def self.parse1(content, options)
-      s = StringScanner.new(content + "\n")
+      lines = content.split("\n")
 
       elements = []
 
       p = nil
 
-      while !s.eos?
-        case
-        when s.scan(/\s*\n/)
+      # TODO:
+      # list
+      # table
+      # macro: toc, code, pagetree, noformat, jira
+      lines.each { |l|
+        case l
+        when /\Ah(\d)\.\s+(.+)\z/
           p = nil
-        when s.scan(/h(\d)\.\s+(.+)\n/)
+          elements << Element::Heading.new(l, $1.to_i, $2)
+        when /\A----+\z/
           p = nil
-          elements << Element::Heading.new(s[0], s[1].to_i, s[2])
-        when s.scan(/----+\n/)
+          elements << Element::HorizontalRule.new(l)
+        when /\A([*\-#]+)\s+(.+)\z/
           p = nil
-          elements << Element::HorizontalRule.new(s[0])
-        when s.scan(/(.+)\n/)
+          elements << Element::ListItem.new(l, $1, $2)
+        when /\A\s*\z/
+          p = nil
+        when /\A(.+)\z/
           if p
-            p.append(s[0])
+            p.append($1)
           else
-            p = Element::P.new(s[0])
+            p = Element::P.new($1)
             elements << p
           end
         else
-          raise "Parse Error. rest=#{ s.rest }"
+          raise "Parse Error. line=#{l}"
         end
-      end
+      }
       elements
+    end
+
+    def self.parse_content
+      # TODO:
+      # link
+      # img
+      # strong....
     end
   end
 end

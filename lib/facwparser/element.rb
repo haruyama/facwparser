@@ -28,5 +28,17 @@ module Facwparser
         super(other) && self.level == other.level && self.content == other.content
       end
     end
+    class ListItem < ElementBase
+      attr_reader :type, :level, :content
+      def initialize(source, symbols, content)
+        super(source)
+        @type    = symbols[-1]
+        @level   = symbols.size
+        @content = content
+      end
+      def ==(other)
+        super(other) && self.type == other.type && self.level == other.level && self.content == other.content
+      end
+    end
   end
 end

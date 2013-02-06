@@ -16,9 +16,9 @@ class TestParse < Test::Unit::TestCase
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("ほげ\n"),
-        Facwparser::Element::P.new("ほげほげ\n"),
-        Facwparser::Element::P.new("ほげほげげほ\nにゃ\n"),
+        Facwparser::Element::P.new("ほげ"),
+        Facwparser::Element::P.new("ほげほげ"),
+        Facwparser::Element::P.new("ほげほげげほにゃ"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -34,10 +34,10 @@ h3.  ほげほげげほ
 EOS
     assert_equal(
       [
-        Facwparser::Element::Heading.new("h1. ほげ\n", 1, "ほげ"),
-        Facwparser::Element::P.new("ほげほげ\n"),
-        Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, "ほげほげげほ"),
-        Facwparser::Element::P.new("にゃ\n"),
+        Facwparser::Element::Heading.new("h1. ほげ", 1, "ほげ"),
+        Facwparser::Element::P.new("ほげほげ"),
+        Facwparser::Element::Heading.new("h3.  ほげほげげほ", 3, "ほげほげげほ"),
+        Facwparser::Element::P.new("にゃ"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -56,11 +56,33 @@ EOS
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("1\n"),
-        Facwparser::Element::HorizontalRule.new("----\n"),
-        Facwparser::Element::P.new("2\n---\n3\n"),
-        Facwparser::Element::HorizontalRule.new("-----\n"),
-        Facwparser::Element::P.new("4\n"),
+        Facwparser::Element::P.new("1"),
+        Facwparser::Element::HorizontalRule.new("----"),
+        Facwparser::Element::P.new("2---3"),
+        Facwparser::Element::HorizontalRule.new("-----"),
+        Facwparser::Element::P.new("4"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_list_item
+    source =<<EOS
+1
+- 2
+3
+** 4
+### 5
+#*#* 6
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1"),
+        Facwparser::Element::ListItem.new("- 2", '-', '2'),
+        Facwparser::Element::P.new("3"),
+        Facwparser::Element::ListItem.new("** 4", '**', '4'),
+        Facwparser::Element::ListItem.new("### 5", '###', '5'),
+        Facwparser::Element::ListItem.new("#*#* 6", '#*#*', '6'),
       ],
       Facwparser::Parse.parse1(source, {}))
 
