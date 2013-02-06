@@ -48,5 +48,9 @@ module Facwparser
         @elements = source.split('|')[1..-2]
       end
     end
+    class MacroBase < ElementBase
+    end
+    class TocMacro < MacroBase
+    end
   end
 end

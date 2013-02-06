@@ -16,9 +16,9 @@ class TestParse < Test::Unit::TestCase
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("ほげ"),
-        Facwparser::Element::P.new("ほげほげ"),
-        Facwparser::Element::P.new("ほげほげげほにゃ"),
+        Facwparser::Element::P.new("ほげ\n"),
+        Facwparser::Element::P.new("ほげほげ\n"),
+        Facwparser::Element::P.new("ほげほげげほ\nにゃ\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -34,10 +34,10 @@ h3.  ほげほげげほ
 EOS
     assert_equal(
       [
-        Facwparser::Element::Heading.new("h1. ほげ", 1, "ほげ"),
-        Facwparser::Element::P.new("ほげほげ"),
-        Facwparser::Element::Heading.new("h3.  ほげほげげほ", 3, "ほげほげげほ"),
-        Facwparser::Element::P.new("にゃ"),
+        Facwparser::Element::Heading.new("h1. ほげ\n", 1, "ほげ"),
+        Facwparser::Element::P.new("ほげほげ\n"),
+        Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, "ほげほげげほ"),
+        Facwparser::Element::P.new("にゃ\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -56,11 +56,11 @@ EOS
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("1"),
-        Facwparser::Element::HorizontalRule.new("----"),
-        Facwparser::Element::P.new("2---3"),
-        Facwparser::Element::HorizontalRule.new("-----"),
-        Facwparser::Element::P.new("4"),
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::HorizontalRule.new("----\n"),
+        Facwparser::Element::P.new("2\n---\n3\n"),
+        Facwparser::Element::HorizontalRule.new("-----\n"),
+        Facwparser::Element::P.new("4\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -77,12 +77,12 @@ EOS
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("1"),
-        Facwparser::Element::ListItem.new("- 2", '-', '2'),
-        Facwparser::Element::P.new("3"),
-        Facwparser::Element::ListItem.new("** 4", '**', '4'),
-        Facwparser::Element::ListItem.new("### 5", '###', '5'),
-        Facwparser::Element::ListItem.new("#*#* 6", '#*#*', '6'),
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::ListItem.new("- 2\n", '-', '2'),
+        Facwparser::Element::P.new("3\n"),
+        Facwparser::Element::ListItem.new("** 4\n", '**', '4'),
+        Facwparser::Element::ListItem.new("### 5\n", '###', '5'),
+        Facwparser::Element::ListItem.new("#*#* 6\n", '#*#*', '6'),
       ],
       Facwparser::Parse.parse1(source, {}))
 
@@ -97,10 +97,26 @@ EOS
 EOS
     assert_equal(
       [
-        Facwparser::Element::P.new("1"),
-        Facwparser::Element::TableHeaders.new('||2||3||'),
-        Facwparser::Element::TableData.new('|4|5|'),
-        Facwparser::Element::P.new("6"),
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::TableHeaders.new("||2||3||\n"),
+        Facwparser::Element::TableData.new("|4|5|\n"),
+        Facwparser::Element::P.new("6\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_toc
+    source =<<EOS
+1
+{toc}
+2
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::TocMacro.new("{toc}\n"),
+        Facwparser::Element::P.new("2\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
 
