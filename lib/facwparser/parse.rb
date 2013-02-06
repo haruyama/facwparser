@@ -18,8 +18,8 @@ module Facwparser
       p = nil
 
       # TODO:
-      # macro: toc, code, pagetree, noformat
-      while !s.eos?
+      # macro: code, pagetree, noformat
+      while s.rest?
         case
         when s.scan(/h(\d)\.[ \t\v]+(.+?)\n/)
           p = nil
@@ -36,7 +36,7 @@ module Facwparser
         when s.scan(/\|.+\|\s*?\n/)
           p = nil
           elements << Element::TableData.new(s[0])
-        when s.scan(/\{toc\}\s*?\n/)
+        when s.scan(/\{toc(\:.*?)?\}\s*?\n/)
           p = nil
           elements << Element::TocMacro.new(s[0])
         when s.scan(/\s*?\n/)

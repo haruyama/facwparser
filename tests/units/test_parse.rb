@@ -106,7 +106,7 @@ EOS
 
   end
 
-  def test_parse1_toc
+  def test_parse1_toc_1
     source =<<EOS
 1
 {toc}
@@ -116,6 +116,22 @@ EOS
       [
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::TocMacro.new("{toc}\n"),
+        Facwparser::Element::P.new("2\n"),
+      ],
+      Facwparser::Parse.parse1(source, {}))
+
+  end
+
+  def test_parse1_toc_2
+    source =<<EOS
+1
+{toc:max_level=3}
+2
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::TocMacro.new("{toc:max_level=3}\n"),
         Facwparser::Element::P.new("2\n"),
       ],
       Facwparser::Parse.parse1(source, {}))
