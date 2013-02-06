@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Facwparser::VERSION
   gem.authors       = ["HARUYAMA Seigo"]
   gem.email         = ["haruyama@unixuser.org"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Fuxxing Atlassian Confluence Wiki Parser}
+  gem.summary       = %q{Parser of Atlassian Confluence Wiki Markup.}
+  gem.homepage      = "https://github.com/haruyama/facwparser"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

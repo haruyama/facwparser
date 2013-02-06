@@ -1,6 +1,6 @@
 # Facwparser
 
-TODO: Write a gem description
+Fuxxing Atlassian Confluence Wiki Parser
 
 ## Installation
 
