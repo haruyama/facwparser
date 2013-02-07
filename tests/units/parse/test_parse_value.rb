@@ -76,5 +76,32 @@ class TestParseValue < Test::Unit::TestCase
     ], Facwparser::Parse.parse_value('1{jira:SYSTEMRD-1}2', {}))
   end
 
+  def test_parse_value_jira_misc
+      assert_equal([
+        Facwparser::Element::Text.new('1', '1'),
+        Facwparser::Element::Text.new('{jira:SYSTEMRD-1', '{jira:SYSTEMRD-1'),
+    ], Facwparser::Parse.parse_value('1{jira:SYSTEMRD-1', {}))
+
+      assert_equal([
+        Facwparser::Element::Text.new('1', '1'),
+        Facwparser::Element::Text.new('{jira:SYSTEMRD\-1', '{jira:SYSTEMRD-1'),
+    ], Facwparser::Parse.parse_value('1{jira:SYSTEMRD\-1', {}))
+
+      assert_equal([
+        Facwparser::Element::Text.new('1', '1'),
+        Facwparser::Element::Text.new('\{', '{'),
+        Facwparser::Element::Text.new('jira:SYSTEMRD', 'jira:SYSTEMRD'),
+        Facwparser::Element::Text.new('\\-', '-'),
+        Facwparser::Element::Text.new('1', '1'),
+    ], Facwparser::Parse.parse_value('1\\{jira:SYSTEMRD\\-1', {}))
+
+      assert_equal([
+        Facwparser::Element::Text.new('1', '1'),
+        Facwparser::Element::Text.new('\{', '{'),
+        Facwparser::Element::JiraMacro.new('{jira:SYSTEMRD\-1}', 'SYSTEMRD-1'),
+    ], Facwparser::Parse.parse_value('1\\{{jira:SYSTEMRD\\-1}', {}))
+
+  end
+
 end
 
