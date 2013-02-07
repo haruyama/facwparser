@@ -122,7 +122,7 @@ module Facwparser
             children << Element::Strike.new(s[0], unescape_text(s[1]))
           when s.scan(/\+(.+?)(?<!\\)\+/)
             children << Element::Under.new(s[0], unescape_text(s[1]))
-          when s.scan(/\!(.+?)(?<!\\)\!/)
+          when s.scan(/\!([\w]+?)(?<!\\)\!/)
             children << Element::Image.new(s[0], unescape_text(s[1]))
           when s.scan(/\{jira:(.+?)(?<!\\)\}/)
             children << Element::JiraMacro.new(s[0], unescape_text(s[1]))

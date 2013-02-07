@@ -101,13 +101,16 @@ module Facwparser
         @options = options
       end
       def render_html(options)
-        "TODO: table of contents\n"
+        "TODO: table of contents Macro\n"
       end
     end
     class PagetreeMacro < MacroBase
       def initialize(source, options = nil)
         super(source)
         @options = options
+      end
+      def render_html(options)
+        "TODO: pagetree macro\n"
       end
     end
     class NoformatMacro < MacroBase
@@ -167,6 +170,9 @@ module Facwparser
     end
 
     class Image < InlineElementBase
+      def render_html(options)
+        '<img src="' + CGI.escapeHTML(@text) + '">'
+      end
     end
 
     class JiraMacro < MacroBase
