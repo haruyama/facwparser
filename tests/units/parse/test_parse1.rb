@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require File.dirname(__FILE__) + '/../../../lib/facwparser/parse'
+require File.dirname(__FILE__) + '/../../../lib/facwparser/parser'
 
 
 class TestParse1 < Test::Unit::TestCase
@@ -20,7 +20,7 @@ EOS
         Facwparser::Element::P.new("ほげほげ\n"),
         Facwparser::Element::P.new("ほげほげげほ\nにゃ\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -39,7 +39,7 @@ EOS
         Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, "ほげほげげほ"),
         Facwparser::Element::P.new("にゃ\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -62,7 +62,7 @@ EOS
         Facwparser::Element::HorizontalRule.new("-----\n"),
         Facwparser::Element::P.new("4\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -84,7 +84,7 @@ EOS
         Facwparser::Element::ListItem.new("### 5\n", '###', '5'),
         Facwparser::Element::ListItem.new("#*#* 6\n", '#*#*', '6'),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -102,7 +102,7 @@ EOS
         Facwparser::Element::TableData.new("|4|5|\n"),
         Facwparser::Element::P.new("6\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -118,7 +118,7 @@ EOS
         Facwparser::Element::TocMacro.new("{toc}\n"),
         Facwparser::Element::P.new("2\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -134,7 +134,7 @@ EOS
         Facwparser::Element::TocMacro.new("{toc:maxLevel=3}\n", 'maxLevel=3'),
         Facwparser::Element::P.new("2\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -150,7 +150,7 @@ EOS
         Facwparser::Element::PagetreeMacro.new("{pagetree:root=@self}\n", 'root=@self'),
         Facwparser::Element::P.new("2\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -169,7 +169,7 @@ EOS
         Facwparser::Element::NoformatMacro.new("{noformat}\n2\n3\n{noformat}\n", "2\n3\n"),
         Facwparser::Element::P.new("4\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 
@@ -188,7 +188,7 @@ EOS
         Facwparser::Element::CodeMacro.new("{code:ruby}\na = 1 + 2\n3\n{code}\n", 'ruby', "a = 1 + 2\n3\n"),
         Facwparser::Element::P.new("4\n"),
       ],
-      Facwparser::Parse.parse1(source, {}))
+      Facwparser::Parser.parse1(source, {}))
 
   end
 

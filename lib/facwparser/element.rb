@@ -1,4 +1,8 @@
 # -*- encoding: utf-8 -*-
+
+require 'cgi'
+
+
 module Facwparser
   module Element
     class ElementBase
@@ -10,13 +14,24 @@ module Facwparser
       def ==(other)
         self.class == other.class && self.source == other.source
       end
+
+      def render_html(options)
+        raise "TODO: render_html is not implemented: " + self.class.to_s + "\n"
+      end
     end
+
     class P < ElementBase
       def append(source)
         @source += source
       end
+      def render_html(options)
+        '<p>' + CGI.escapeHTML(source.chomp) + "<p>\n"
+      end
     end
     class HorizontalRule < ElementBase
+      def render_html(options)
+        "<hr>\n"
+      end
     end
     class Heading < ElementBase
       attr_reader :level, :value
@@ -24,6 +39,9 @@ module Facwparser
         super(source)
         @level = level
         @value = value
+      end
+      def render_html(options)
+        "<h#{level}>#{CGI.escapeHTML value}</h#{level}>\n"
       end
     end
     class List < ElementBase
@@ -36,6 +54,14 @@ module Facwparser
         children.push(item)
         self
       end
+      def render_html(options)
+        case type
+        when '#'
+          return "<ol>\n" + children.map{ |c| c.render_html(options) }.join(" ") + "</ol>\n"
+        else
+          return "<ul>\n" + children.map{ |c| c.render_html(options) }.join(" ") + "</ul>\n"
+        end
+      end
     end
     class ListItem < ElementBase
       attr_reader :symbols, :level, :value
@@ -44,6 +70,9 @@ module Facwparser
         @symbols = symbols
         @level   = symbols.size
         @value = value
+      end
+      def render_html(options)
+        "<li>#{CGI.escapeHTML value}</li>\n"
       end
     end
     class TableHeaders < ElementBase
@@ -67,6 +96,9 @@ module Facwparser
       def initialize(source, options = nil)
         super(source)
         @options = options
+      end
+      def render_html(options)
+        "TODO: table of contents\n"
       end
     end
     class PagetreeMacro < MacroBase

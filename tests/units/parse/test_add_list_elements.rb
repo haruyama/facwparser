@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require File.dirname(__FILE__) + '/../../../lib/facwparser/parse'
+require File.dirname(__FILE__) + '/../../../lib/facwparser/parser'
 
 
 class TestAddListElements < Test::Unit::TestCase
@@ -20,7 +20,7 @@ class TestAddListElements < Test::Unit::TestCase
               Facwparser::Element::List.new('#').push(
                 Facwparser::Element::ListItem.new("**# 6\n", '**#', '6'))
       ))
-    ], Facwparser::Parse.add_list_elements(pre, {}))
+    ], Facwparser::Parser.add_list_elements(pre, {}))
 
   end
 

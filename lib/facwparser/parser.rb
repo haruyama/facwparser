@@ -5,7 +5,7 @@ require 'strscan'
 require File.dirname(__FILE__) + '/element'
 
 module Facwparser
-  module Parse
+  module Parser
     def self.parse(content, options = {})
       elements = parse1(content, options)
       process_elements(elements, options)
@@ -60,7 +60,7 @@ module Facwparser
           elements << Element::HorizontalRule.new(s[0])
         when s.scan(/([*\-#]+)[ \t\f]+(.+)\n/)
           p = nil
-          elements << Element::ListItem.new(s[0], [1], s[2])
+          elements << Element::ListItem.new(s[0], s[1], s[2])
         when s.scan(/\|\|.+\|\|[ \t\f]*\n/)
           p = nil
           elements << Element::TableHeaders.new(s[0])
