@@ -13,15 +13,13 @@ class TestAddListElements < Test::Unit::TestCase
       ]
 
       assert_equal([
-        Facwparser::Element::ListStart.new('*'),
-        Facwparser::Element::ListItem.new("* 4\n", '*', '4'),
-        Facwparser::Element::ListStart.new('*'),
-        Facwparser::Element::ListItem.new("** 5\n", '**', '5'),
-        Facwparser::Element::ListStart.new('#'),
-        Facwparser::Element::ListItem.new("**# 6\n", '**#', '6'),
-        Facwparser::Element::ListEnd.new('#'),
-        Facwparser::Element::ListEnd.new('*'),
-        Facwparser::Element::ListEnd.new('*'),
+        Facwparser::Element::List.new('*').push(
+          Facwparser::Element::ListItem.new("* 4\n", '*', '4')).push(
+          Facwparser::Element::List.new('*').push(
+            Facwparser::Element::ListItem.new("** 5\n", '**', '5')).push(
+              Facwparser::Element::List.new('#').push(
+                Facwparser::Element::ListItem.new("**# 6\n", '**#', '6'))
+      ))
     ], Facwparser::Parse.add_list_elements(pre, {}))
 
   end

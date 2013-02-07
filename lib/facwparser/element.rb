@@ -2,9 +2,10 @@
 module Facwparser
   module Element
     class ElementBase
-      attr_reader :source
+      attr_reader :source, :children
       def initialize(source)
-        @source = source
+        @source   = source
+        @children = []
       end
       def ==(other)
         self.class == other.class && self.source == other.source
@@ -25,17 +26,15 @@ module Facwparser
         @value = value
       end
     end
-    class ListStart < ElementBase
+    class List < ElementBase
       attr_reader :type
       def initialize(type)
         super('')
         @type = type
       end
-    end
-    class ListEnd < ElementBase
-      def initialize(type)
-        super('')
-        @type = type
+      def push(item)
+        children.push(item)
+        self
       end
     end
     class ListItem < ElementBase

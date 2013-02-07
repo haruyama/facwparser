@@ -12,6 +12,7 @@ module Facwparser
     end
 
     def self.process_elements(elements, options)
+      # TODO heading
       add_list_elements(elements, options)
     end
 
@@ -22,24 +23,23 @@ module Facwparser
         case
         when e.class == Element::ListItem
           while list_stack.size > e.level
-            processed << Element::ListEnd.new(list_stack.pop.type)
+            list_stack.pop
           end
           while list_stack.size < e.level
-            start = Element::ListStart.new(e.symbols[list_stack.size])
-            processed << start
-            list_stack.push(start)
+            list = Element::List.new(e.symbols[list_stack.size])
+            if list_stack.empty?
+              processed << list
+            else
+              list_stack[-1].push list
+            end
+            list_stack << list
           end
-          processed << e
+          list_stack[-1].push e
         else
-          while list_stack.size > 0
-            processed << Element::ListEnd.new(list_stack.pop.type)
-          end
+          list_stack.clear if list_stack.size > 0
           processed << e
         end
       }
-      while list_stack.size > 0
-        processed << Element::ListEnd.new(list_stack.pop.type)
-      end
       processed
     end
 
