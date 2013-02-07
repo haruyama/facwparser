@@ -25,11 +25,24 @@ module Facwparser
         @content = content
       end
     end
+    class ListStart < ElementBase
+      attr_reader :type
+      def initialize(type)
+        super('')
+        @type = type
+      end
+    end
+    class ListEnd < ElementBase
+      def initialize(type)
+        super('')
+        @type = type
+      end
+    end
     class ListItem < ElementBase
-      attr_reader :type, :level, :content
+      attr_reader :symbols, :level, :content
       def initialize(source, symbols, content)
         super(source)
-        @type    = symbols[-1]
+        @symbols = symbols
         @level   = symbols.size
         @content = content
       end

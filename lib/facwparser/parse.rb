@@ -7,7 +7,40 @@ require File.dirname(__FILE__) + '/element'
 module Facwparser
   module Parse
     def self.parse(content, options = {})
-      parse1(content, options)
+      elements = parse1(content, options)
+      processed_elements = process_elements(elements, options)
+    end
+
+    def self.process_elements(elements, options)
+      add_list_elements(elements, options)
+    end
+
+    def self.add_list_elements(elements, options)
+      processed = []
+      list_stack = []
+      elements.each { |e|
+        case
+        when e.class == Element::ListItem
+          while list_stack.size > e.level
+            processed << Element::ListEnd.new(list_stack.pop.type)
+          end
+          while list_stack.size < e.level
+            start = Element::ListStart.new(e.symbols[list_stack.size])
+            processed << start
+            list_stack.push(start)
+          end
+          processed << e
+        else
+          while list_stack.size > 0
+            processed << Element::ListEnd.new(list_stack.pop.type)
+          end
+          processed << e
+        end
+      }
+      while list_stack.size > 0
+        processed << Element::ListEnd.new(list_stack.pop.type)
+      end
+      processed
     end
 
     def self.parse1(content, options)

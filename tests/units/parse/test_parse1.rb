@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require File.dirname(__FILE__) + '/../../lib/facwparser/parse'
+require File.dirname(__FILE__) + '/../../../lib/facwparser/parse'
 
 
-class TestParse < Test::Unit::TestCase
+class TestParse1 < Test::Unit::TestCase
 
   def test_parse1_p
     source =<<EOS
