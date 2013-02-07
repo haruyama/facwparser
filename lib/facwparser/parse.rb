@@ -95,7 +95,7 @@ module Facwparser
       elements
     end
 
-    def self.parse_content
+    def self.parse_value
       # TODO:
       # link
       # img

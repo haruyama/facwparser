@@ -18,11 +18,11 @@ module Facwparser
     class HorizontalRule < ElementBase
     end
     class Heading < ElementBase
-      attr_reader :level, :content
-      def initialize(source, level, content)
+      attr_reader :level, :value
+      def initialize(source, level, value)
         super(source)
         @level = level
-        @content = content
+        @value = value
       end
     end
     class ListStart < ElementBase
@@ -39,12 +39,12 @@ module Facwparser
       end
     end
     class ListItem < ElementBase
-      attr_reader :symbols, :level, :content
-      def initialize(source, symbols, content)
+      attr_reader :symbols, :level, :value
+      def initialize(source, symbols, value)
         super(source)
         @symbols = symbols
         @level   = symbols.size
-        @content = content
+        @value = value
       end
     end
     class TableHeaders < ElementBase
@@ -76,16 +76,16 @@ module Facwparser
       end
     end
     class NoformatMacro < MacroBase
-      def initialize(source, content)
+      def initialize(source, value)
         super(source)
-        @content = content
+        @value = value
       end
     end
     class CodeMacro < MacroBase
-      def initialize(source, options, content)
+      def initialize(source, options, value)
         super(source)
         @options = options
-        @content = content
+        @value = value
       end
     end
   end
