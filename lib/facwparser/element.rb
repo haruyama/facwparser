@@ -60,6 +60,7 @@ module Facwparser
         @elements = source.split('|')[1..-2]
       end
     end
+
     class MacroBase < ElementBase
     end
     class TocMacro < MacroBase
@@ -86,6 +87,45 @@ module Facwparser
         @options = options
         @value = value
       end
+    end
+
+    class InlineElementBase < ElementBase
+      attr_reader :text
+      def initialize(source, text)
+        super(source)
+        @text = text
+      end
+      def ==(other)
+        super(other) && self.text == other.text
+      end
+    end
+
+    class A < InlineElementBase
+    end
+
+    class Bold < InlineElementBase
+    end
+
+    class Italic < InlineElementBase
+    end
+
+    class Strike < InlineElementBase
+    end
+
+    class Under < InlineElementBase
+    end
+
+    class Image < InlineElementBase
+    end
+
+    class JiraMacro < MacroBase
+      def initialize(source, options)
+        super(source)
+        @options = options
+      end
+    end
+
+    class Text < InlineElementBase
     end
   end
 end

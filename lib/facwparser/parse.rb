@@ -8,7 +8,7 @@ module Facwparser
   module Parse
     def self.parse(content, options = {})
       elements = parse1(content, options)
-      processed_elements = process_elements(elements, options)
+      process_elements(elements, options)
     end
 
     def self.process_elements(elements, options)
@@ -95,12 +95,47 @@ module Facwparser
       elements
     end
 
-    def self.parse_value
-      # TODO:
-      # link
-      # img
-      # strong....
-      # macro: jira
+    def self.unescape_text(text)
+      text.gsub(/\\([\[\]\*+_?{}!-])/) {
+        $1
+      }
+    end
+
+    def self.parse_value(value, options)
+
+      #jira
+      #img
+
+      children = []
+
+      value.split("\n").each { |l|
+        s = StringScanner.new(l)
+        while s.rest?
+          case
+          when s.scan(/\[(.+?)(?<!\\)\]/)
+            children << Element::A.new(s[0], unescape_text(s[1]))
+          when s.scan(/\*(.+?)(?<!\\)\*/)
+            children << Element::Bold.new(s[0], unescape_text(s[1]))
+          when s.scan(/\_(.+?)(?<!\\)\_/)
+            children << Element::Italic.new(s[0], unescape_text(s[1]))
+          when s.scan(/\-(.+?)(?<!\\)\-/)
+            children << Element::Strike.new(s[0], unescape_text(s[1]))
+          when s.scan(/\+(.+?)(?<!\\)\+/)
+            children << Element::Under.new(s[0], unescape_text(s[1]))
+          when s.scan(/\{jira:(.+?)(?<!\\)\}/)
+            children << Element::JiraMacro.new(s[0], unescape_text(s[1]))
+          when s.scan(/\!(.+?)(?<!\\)\!/)
+            children << Element::Image.new(s[0], unescape_text(s[1]))
+          when s.scan(/[^\[*_+{!-]+/)
+            children << Element::Text.new(s[0], unescape_text(s[0]))
+          else
+            children << Element::Text.new(s.rest, unescape_text(s.rest))
+            break
+          end
+        end
+      }
+
+      children
     end
   end
 end
