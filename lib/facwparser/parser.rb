@@ -12,7 +12,7 @@ module Facwparser
     end
 
     def self.process_elements(elements, options)
-      # TODO heading
+      # TODO toc, table
       add_list_elements(elements, options)
     end
 
