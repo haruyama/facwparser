@@ -64,7 +64,7 @@ module Facwparser
     end
 
     def self.parse1(content, options)
-      s = StringScanner.new(content + "\n")
+      s = StringScanner.new(content.gsub("\r", '') + "\n")
 
       elements = []
 
