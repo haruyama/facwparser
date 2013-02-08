@@ -102,7 +102,7 @@ module Facwparser
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| '<th>' + CGI.escapeHTML(e.strip) + '</th>'}.join() +
+          @elements.map { |e| '<th>' + Parser.parse_value(e, options).map { |c| c.render_html(options) }.join(" ") + '</th>'}.join() +
         "</tr>"
       end
     end
@@ -110,11 +110,37 @@ module Facwparser
       attr_reader :elements
       def initialize(source)
         super(source)
-        @elements = source.split('|')[1..-2]
+        @elements = []
+        element = ''
+        s = StringScanner.new(source[1..-2])
+        in_link = false
+        while s.rest?
+          case
+          when s.scan(/[^|\[\]]+/) || s.scan(/\\\[/) || s.scan(/\\\]/) || s.scan(/\\\|/)
+            element += s[0]
+          when s.scan(/\[/)
+            in_link = true
+            element += s[0]
+          when s.scan(/\]/)
+            in_link = false
+            element += s[0]
+          when s.scan(/\|/)
+            if in_link
+              element += s[0]
+            else
+              @elements << element
+              element = ''
+            end
+          else
+            element += s.rest
+            break
+          end
+        end
+        @elements << element if !element.empty?
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| '<td>' + CGI.escapeHTML(e.strip) + '</td>'}.join() +
+          @elements.map { |e| '<td>' + Parser.parse_value(e, options).map { |c| c.render_html(options) }.join(" ") + '</td>'}.join() +
         "</tr>"
       end
     end
@@ -184,7 +210,7 @@ module Facwparser
 
     class Bold < InlineElementBase
       def render_html(options)
-        "<em>#{CGI.escapeHTML(@text)}</em>"
+        "<b>#{CGI.escapeHTML(@text)}</b>"
       end
     end
 
