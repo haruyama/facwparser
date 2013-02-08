@@ -26,6 +26,9 @@ class TestParseValue < Test::Unit::TestCase
         Facwparser::Element::A.new('[hoge\]]', 'hoge]'),
         Facwparser::Element::Text.new('2', '2')
     ], Facwparser::Parser.parse_value('1[hoge\]]2', {}))
+      assert_equal([
+        Facwparser::Element::A.new('[株式会社ミクシィ|https://mixi.co.jp/]', '株式会社ミクシィ|https://mixi.co.jp/'),
+      ], Facwparser::Parser.parse_value('[株式会社ミクシィ|https://mixi.co.jp/]', {}))
   end
 
   def test_parse_value_bold
