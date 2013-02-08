@@ -63,9 +63,9 @@ class TestParseValue < Test::Unit::TestCase
   def test_parse_value_image
       assert_equal([
         Facwparser::Element::Text.new('1', '1'),
-        Facwparser::Element::Image.new('!img!', 'img'),
+        Facwparser::Element::Image.new('!http://www.unixuser.org/!', 'http://www.unixuser.org/'),
         Facwparser::Element::Text.new('2', '2')
-    ], Facwparser::Parser.parse_value('1!img!2', {}))
+    ], Facwparser::Parser.parse_value('1!http://www.unixuser.org/!2', {}))
   end
 
   def test_parse_value_jira_macro

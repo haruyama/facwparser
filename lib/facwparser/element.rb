@@ -57,7 +57,7 @@ module Facwparser
         self
       end
       def render_html(options)
-        case type
+        case @type
         when '#'
           return "<ol>\n" + @children.map{ |c| c.render_html(options) }.join(" ") + "</ol>\n"
         else
@@ -78,11 +78,32 @@ module Facwparser
         "<li>" + @children.map {|c| c.render_html(options) }.join(" ") + "</li>\n"
       end
     end
+    class Table < ElementBase
+      def initialize()
+        super('')
+      end
+      def push(item)
+        @children ||= []
+        @children.push(item)
+        self
+      end
+      def render_html(options)
+        "<table><thead>\n" + @children[0].render_html(options) +
+        "\n</thead>\n<tbody>\n" +
+        @children.drop(1).map{|c| c.render_html(options)}.join("\n") +
+        "\n</tbody></table>\n"
+      end
+    end
     class TableHeaders < ElementBase
       attr_reader :elements
       def initialize(source)
         super(source)
         @elements = source.split('||')[1..-2]
+      end
+      def render_html(options)
+        "<tr>" +
+          @elements.map { |e| '<th>' + CGI.escapeHTML(e.strip) + '</th>'}.join() +
+        "</tr>"
       end
     end
     class TableData < ElementBase
@@ -90,6 +111,11 @@ module Facwparser
       def initialize(source)
         super(source)
         @elements = source.split('|')[1..-2]
+      end
+      def render_html(options)
+        "<tr>" +
+          @elements.map { |e| '<td>' + CGI.escapeHTML(e.strip) + '</td>'}.join() +
+        "</tr>"
       end
     end
 
@@ -129,8 +155,7 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        #TODO: syntax highlight
-        "<code><pre>\n#{CGI.escapeHTML @value}\n</pre></code>\n"
+        "<code class=\"code_#{CGI.escapeHTML(@options[1..-1])}\"><pre>\n#{CGI.escapeHTML @value}\n</pre></code>\n"
       end
     end
 
@@ -147,11 +172,20 @@ module Facwparser
 
     class A < InlineElementBase
       def render_html(options)
-        "<p>TODO: A.render_html: " + CGI.escapeHTML(@text) + "</p>"
+        if @text =~ /\A(.+)\|((?:https?|ftp|file):.+)\z/
+          return '<a href="' + CGI.escapeHTML($2) +'">' + CGI.escapeHTML($1) + '</a>'
+        elsif @text =~ /\A(?:https?|ftp|file):.+\z/
+          return '<a href="' + CGI.escapeHTML(@text) +'">' + CGI.escapeHTML(@text) + '</a>'
+        else
+          return '[' + CGI.escapeHTML(@text) + ']'
+        end
       end
     end
 
     class Bold < InlineElementBase
+      def render_html(options)
+        "<em>#{CGI.escapeHTML(@text)}</em>"
+      end
     end
 
     class Italic < InlineElementBase
@@ -167,6 +201,9 @@ module Facwparser
     end
 
     class Under < InlineElementBase
+      def render_html(options)
+        "<u>#{CGI.escapeHTML(@text)}</u>"
+      end
     end
 
     class Image < InlineElementBase
@@ -176,18 +213,20 @@ module Facwparser
     end
 
     class JiraMacro < MacroBase
+      attr_reader :options
       def initialize(source, options)
         super(source)
         @options = options
       end
       def render_html(options)
-        "<p>TODO: JiraMacro.render_html: " + CGI.escapeHTML(@options) + "</p>"
+        jira_browse_url = (options && options['jira_browse_url']) || ''
+        return '<a href="' + CGI.escapeHTML(jira_browse_url) + CGI.escapeHTML(@options) +'>' + CGI.escapeHTML(@options) + '</a>'
       end
     end
 
     class Text < InlineElementBase
       def render_html(options)
-        CGI.escapeHTML source
+        CGI.escapeHTML @source
       end
     end
   end

@@ -12,8 +12,9 @@ module Facwparser
     end
 
     def self.process_elements(elements, options)
-      # TODO toc, table
-      add_list_elements(elements, options)
+      # TODO toc
+      processed = add_list_elements(elements, options)
+      add_table_elements(processed, options)
     end
 
     def self.add_list_elements(elements, options)
@@ -37,6 +38,25 @@ module Facwparser
           list_stack[-1].push e
         else
           list_stack.clear if list_stack.size > 0
+          processed << e
+        end
+      }
+      processed
+    end
+
+    def self.add_table_elements(elements, options)
+      processed = []
+      table = nil
+      elements.each { |e|
+        case
+        when e.class == Element::TableHeaders || e.class == Element::TableData
+          if !table
+            table = Element::Table.new
+            processed << table
+          end
+          table.push e
+        else
+          table = nil
           processed << e
         end
       }
@@ -122,7 +142,7 @@ module Facwparser
             children << Element::Strike.new(s[0], unescape_text(s[1]))
           when s.scan(/\+(.+?)(?<!\\)\+/)
             children << Element::Under.new(s[0], unescape_text(s[1]))
-          when s.scan(/\!([\w]+?)(?<!\\)\!/)
+          when s.scan(/\!(https?:(?:.+?))(?<!\\)\!/)
             children << Element::Image.new(s[0], unescape_text(s[1]))
           when s.scan(/\{jira:(.+?)(?<!\\)\}/)
             children << Element::JiraMacro.new(s[0], unescape_text(s[1]))
