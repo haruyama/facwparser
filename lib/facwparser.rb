@@ -4,7 +4,6 @@ require 'facwparser/render'
 
 module Facwparser
   def self.to_html(source, options = nil)
-    print Render.render_html Parser.parse(source, options), options
-    print "\n"
+    Render.render_html(Parser.parse(source, options), options) + "\n"
   end
 end

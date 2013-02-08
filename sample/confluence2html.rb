@@ -10,7 +10,7 @@ print <<EOS
 </head>
 <body>
 EOS
-Facwparser.to_html(ARGF.read)
+print Facwparser.to_html(ARGF.read)
 print <<EOS
 </body>
 </html>
