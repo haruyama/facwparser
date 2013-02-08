@@ -26,7 +26,11 @@ module Facwparser
       end
       def render_html(options)
         @children ||= Parser.parse_value(source, options)
-        "<p>\n" + @children.map { |c| c.render_html(options) }.join("\n")  + "<p>\n"
+        if source =~ /\Abq. /
+          "<blockquote>\n" + @children.map { |c| c.render_html(options) }.join("")  + "\n</blockquote>\n"
+        else
+          "<p>\n" + @children.map { |c| c.render_html(options) }.join("")  + "</p>\n"
+        end
       end
     end
     class HorizontalRule < ElementBase
@@ -59,9 +63,9 @@ module Facwparser
       def render_html(options)
         case @type
         when '#'
-          return "<ol>\n" + @children.map{ |c| c.render_html(options) }.join(" ") + "</ol>\n"
+          return "<ol>\n" + @children.map{ |c| c.render_html(options) }.join("") + "</ol>\n"
         else
-          return "<ul>\n" + @children.map{ |c| c.render_html(options) }.join(" ") + "</ul>\n"
+          return "<ul>\n" + @children.map{ |c| c.render_html(options) }.join("") + "</ul>\n"
         end
       end
     end
@@ -75,7 +79,7 @@ module Facwparser
       end
       def render_html(options)
         @children = Parser.parse_value value, options
-        "<li>" + @children.map {|c| c.render_html(options) }.join(" ") + "</li>\n"
+        "<li>" + @children.map {|c| c.render_html(options) }.join("") + "</li>\n"
       end
     end
     class Table < ElementBase
@@ -184,6 +188,15 @@ module Facwparser
         "<code class=\"code_#{CGI.escapeHTML(@options[1..-1])}\"><pre>\n#{CGI.escapeHTML @value}\n</pre></code>\n"
       end
     end
+    class QuoteMacro < MacroBase
+      def initialize(source, value)
+        super(source)
+        @value = value
+      end
+      def render_html(options)
+        "<blockquote>\n#{CGI.escapeHTML @value}\n</blockquote>\n"
+      end
+    end
 
     class InlineElementBase < ElementBase
       attr_reader :text
@@ -232,6 +245,30 @@ module Facwparser
       end
     end
 
+    class Q < InlineElementBase
+      def render_html(options)
+        "<q>#{CGI.escapeHTML(@text)}</q>"
+      end
+    end
+
+    class SUP < InlineElementBase
+      def render_html(options)
+        "<sup>#{CGI.escapeHTML(@text)}</sup>"
+      end
+    end
+
+    class SUB < InlineElementBase
+      def render_html(options)
+        "<sub>#{CGI.escapeHTML(@text)}</sub>"
+      end
+    end
+
+    class TT < InlineElementBase
+      def render_html(options)
+        "<tt>#{CGI.escapeHTML(@text)}</tt>"
+      end
+    end
+
     class Image < InlineElementBase
       def render_html(options)
         '<img src="' + CGI.escapeHTML(@text) + '">'
@@ -246,7 +283,27 @@ module Facwparser
       end
       def render_html(options)
         jira_browse_url = (options && options['jira_browse_url']) || ''
-        return '<a href="' + CGI.escapeHTML(jira_browse_url) + CGI.escapeHTML(@options) +'>' + CGI.escapeHTML(@options) + '</a>'
+        return '<a href="' + CGI.escapeHTML(jira_browse_url) + CGI.escapeHTML(@options) +'">' + CGI.escapeHTML(@options) + '</a>'
+      end
+    end
+
+    class ColorMacroStart < MacroBase
+      attr_reader :options
+      def initialize(source, options)
+        super(source)
+        @options = options
+      end
+      def render_html(options)
+        return '<font color="' + CGI.escapeHTML(@options) +'">'
+      end
+    end
+
+    class ColorMacroEnd < MacroBase
+      def initialize(source)
+        super(source)
+      end
+      def render_html(options)
+        return '</font>'
       end
     end
 

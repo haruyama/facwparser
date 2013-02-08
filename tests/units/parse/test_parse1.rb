@@ -192,4 +192,23 @@ EOS
 
   end
 
+  def test_parse1_quote
+    source =<<EOS
+1
+{quote}
+2
+3
+{quote}
+4
+EOS
+    assert_equal(
+      [
+        Facwparser::Element::P.new("1\n"),
+        Facwparser::Element::QuoteMacro.new("{quote}\n2\n3\n{quote}\n", "2\n3\n"),
+        Facwparser::Element::P.new("4\n"),
+      ],
+      Facwparser::Parser.parse1(source, {}))
+
+  end
+
 end
