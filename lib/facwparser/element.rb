@@ -25,10 +25,11 @@ module Facwparser
         @source += source
       end
       def render_html(options)
-        @children ||= Parser.parse_value(source, options)
-        if source =~ /\Abq. /
+        if source =~ /\A *bq. (.+)/m
+          @children ||= Parser.parse_value($1, options)
           "<blockquote>\n" + @children.map { |c| c.render_html(options) }.join("")  + "\n</blockquote>\n"
         else
+          @children ||= Parser.parse_value(source, options)
           "<p>\n" + @children.map { |c| c.render_html(options) }.join("")  + "</p>\n"
         end
       end
