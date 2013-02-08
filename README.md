@@ -2,6 +2,8 @@
 
 Fuxxing Atlassian Confluence Wiki Parser
 
+This is a loose Atlassian Confluence Wiki parser.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,7 +20,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'facwparser'
+print <<EOS
+<!DOCTYPE html>
+<html>
+<head>
+<title>sample</title>
+</head>
+<body>
+EOS
+print Facwparser.to_html(ARGF.read)
+print <<EOS
+</body>
+</html>
+EOS
+```
 
 ## Contributing
 
