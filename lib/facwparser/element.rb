@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require 'cgi'
+require 'facwparser/parser'
 
 
 module Facwparser
@@ -18,6 +19,15 @@ module Facwparser
       def render_html(options)
         raise "TODO: render_html is not implemented: " + self.class.to_s + "\n"
       end
+      private
+      def render_html_by_name_and_value(name, value)
+        "<#{CGI.escapeHTML name}>#{CGI.escapeHTML value}</#{CGI.escapeHTML name}>"
+      end
+      def render_html_by_name_and_childlen(name, childlen, options, childlen_join_char = '')
+        "<#{CGI.escapeHTML name}>" +
+          @children.map {|c| c.render_html(options) }.join(childlen_join_char) +
+          "</#{CGI.escapeHTML name}>\n"
+      end
     end
 
     class P < ElementBase
@@ -25,12 +35,12 @@ module Facwparser
         @source += source
       end
       def render_html(options)
-        if source =~ /\A *bq. (.+)/m
+        if @source =~ /\A *bq. (.+)/m
           @children ||= Parser.parse_value($1, options)
-          "<blockquote>\n" + @children.map { |c| c.render_html(options) }.join("")  + "\n</blockquote>\n"
+          render_html_by_name_and_childlen('blockquote', @children, options)
         else
-          @children ||= Parser.parse_value(source, options)
-          "<p>\n" + @children.map { |c| c.render_html(options) }.join("")  + "</p>\n"
+          @children ||= Parser.parse_value(@source, options)
+          render_html_by_name_and_childlen('p', @children, options)
         end
       end
     end
@@ -47,7 +57,8 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        "<h#{level}>#{CGI.escapeHTML value}</h#{level}>\n"
+        @children = Parser.parse_value value, options
+        render_html_by_name_and_childlen("h#{level}", @children, options)
       end
     end
     class List < ElementBase
@@ -80,7 +91,7 @@ module Facwparser
       end
       def render_html(options)
         @children = Parser.parse_value value, options
-        "<li>" + @children.map {|c| c.render_html(options) }.join("") + "</li>\n"
+        render_html_by_name_and_childlen('li', @children, options)
       end
     end
     class Table < ElementBase
@@ -224,49 +235,49 @@ module Facwparser
 
     class Bold < InlineElementBase
       def render_html(options)
-        "<b>#{CGI.escapeHTML(@text)}</b>"
+        render_html_by_name_and_value('b', @text)
       end
     end
 
     class Italic < InlineElementBase
       def render_html(options)
-        "<i>#{CGI.escapeHTML(@text)}</i>"
+        render_html_by_name_and_value('i', @text)
       end
     end
 
     class Strike < InlineElementBase
       def render_html(options)
-        "<s>#{CGI.escapeHTML(@text)}</s>"
+        render_html_by_name_and_value('s', @text)
       end
     end
 
     class Under < InlineElementBase
       def render_html(options)
-        "<u>#{CGI.escapeHTML(@text)}</u>"
+        render_html_by_name_and_value('u', @text)
       end
     end
 
     class Q < InlineElementBase
       def render_html(options)
-        "<q>#{CGI.escapeHTML(@text)}</q>"
+        render_html_by_name_and_value('q', @text)
       end
     end
 
     class SUP < InlineElementBase
       def render_html(options)
-        "<sup>#{CGI.escapeHTML(@text)}</sup>"
+        render_html_by_name_and_value('sup', @text)
       end
     end
 
     class SUB < InlineElementBase
       def render_html(options)
-        "<sub>#{CGI.escapeHTML(@text)}</sub>"
+        render_html_by_name_and_value('sub', @text)
       end
     end
 
     class TT < InlineElementBase
       def render_html(options)
-        "<tt>#{CGI.escapeHTML(@text)}</tt>"
+        render_html_by_name_and_value('tt', @text)
       end
     end
 
@@ -313,5 +324,6 @@ module Facwparser
         CGI.escapeHTML @source
       end
     end
+
   end
 end
