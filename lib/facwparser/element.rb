@@ -295,7 +295,7 @@ module Facwparser
       end
       def render_html(options)
         jira_browse_url = (options && options['jira_browse_url']) || ''
-        return '<a href="' + CGI.escapeHTML(jira_browse_url) + CGI.escapeHTML(@options) +'">' + CGI.escapeHTML(@options) + '</a>'
+        return '<a href="' + CGI.escapeHTML(jira_browse_url + @options) +'">' + CGI.escapeHTML(@options) + '</a>'
       end
     end
 
@@ -322,6 +322,12 @@ module Facwparser
     class Text < InlineElementBase
       def render_html(options)
         CGI.escapeHTML @source
+      end
+    end
+
+    class Br < InlineElementBase
+      def render_html(options)
+        '<br>'
       end
     end
 
