@@ -90,7 +90,7 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        @children = Parser.parse_value value, options
+        @children ||= Parser.parse_value value, options
         render_html_by_name_and_childlen('li', @children, options)
       end
     end

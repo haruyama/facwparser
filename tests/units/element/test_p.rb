@@ -23,6 +23,12 @@ class TestP < Test::Unit::TestCase
                  p.render_html({}))
   end
 
+  def test_p_4
+    p = Facwparser::Element::P.new("<>")
+    assert_equal("<p>&lt;&gt;</p>\n",
+                 p.render_html({}))
+  end
+
   def test_p_blockquote
     p = Facwparser::Element::P.new('bq. hoge')
     assert_equal("<blockquote>hoge</blockquote>\n",
