@@ -12,8 +12,8 @@ class TestHeading < Test::Unit::TestCase
   end
 
   def test_heading_2
-    heading = Facwparser::Element::Heading.new('h1. hoge>', 1, 'hoge>')
-    assert_equal("<h1>hoge&gt;</h1>\n",
+    heading = Facwparser::Element::Heading.new('h3. hoge>', 3, 'hoge>')
+    assert_equal("<h3>hoge&gt;</h3>\n",
                  heading.render_html({}))
   end
 

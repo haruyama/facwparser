@@ -23,10 +23,8 @@ module Facwparser
       def render_html_by_name_and_value(name, value)
         "<#{CGI.escapeHTML name}>#{CGI.escapeHTML value}</#{CGI.escapeHTML name}>"
       end
-      def render_html_by_name_and_childlen(name, childlen, options, childlen_join_char = '')
-        "<#{CGI.escapeHTML name}>" +
-          @children.map {|c| c.render_html(options) }.join(childlen_join_char) +
-          "</#{CGI.escapeHTML name}>\n"
+      def render_html_by_name_and_childlen(name, childlen, options, childlen_join_char = '', element_join_char = '')
+        ["<#{CGI.escapeHTML name}>", @children.map {|c| c.render_html(options) }.join(childlen_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
       end
     end
 
@@ -37,10 +35,10 @@ module Facwparser
       def render_html(options)
         if @source =~ /\A *bq. (.+)/m
           @children ||= Parser.parse_value($1, options)
-          render_html_by_name_and_childlen('blockquote', @children, options)
+          render_html_by_name_and_childlen('blockquote', @children, options) + "\n"
         else
           @children ||= Parser.parse_value(@source, options)
-          render_html_by_name_and_childlen('p', @children, options)
+          render_html_by_name_and_childlen('p', @children, options) + "\n"
         end
       end
     end
@@ -58,7 +56,7 @@ module Facwparser
       end
       def render_html(options)
         @children = Parser.parse_value value, options
-        render_html_by_name_and_childlen("h#{level}", @children, options)
+        render_html_by_name_and_childlen("h#{level}", @children, options) + "\n"
       end
     end
     class List < ElementBase
@@ -73,12 +71,7 @@ module Facwparser
         self
       end
       def render_html(options)
-        case @type
-        when '#'
-          return "<ol>\n" + @children.map{ |c| c.render_html(options) }.join("") + "</ol>\n"
-        else
-          return "<ul>\n" + @children.map{ |c| c.render_html(options) }.join("") + "</ul>\n"
-        end
+        (render_html_by_name_and_childlen(@type == '#' ? 'ol' : 'ul', @children, options, "\n", "\n") + "\n").gsub("\n\n", "\n")
       end
     end
     class ListItem < ElementBase
