@@ -31,13 +31,13 @@ class TestP < Test::Unit::TestCase
 
   def test_p_blockquote
     p = Facwparser::Element::P.new('bq. hoge')
-    assert_equal("<blockquote>hoge</blockquote>\n",
+    assert_equal("<blockquote>\n<p>hoge</p>\n</blockquote>\n",
                  p.render_html({}))
   end
 
   def test_p_blockquote_2
     p = Facwparser::Element::P.new(" bq. hoge\n kuke")
-    assert_equal("<blockquote>hoge kuke</blockquote>\n",
+    assert_equal("<blockquote>\n<p>hoge<br> kuke</p>\n</blockquote>\n",
                  p.render_html({}))
   end
 end

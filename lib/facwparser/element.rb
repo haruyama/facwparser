@@ -34,8 +34,9 @@ module Facwparser
       end
       def render_html(options)
         if @source =~ /\A *bq. (.+)/m
-          @children ||= Parser.parse_value($1, options)
-          render_html_by_name_and_childlen('blockquote', @children, options) + "\n"
+          "<blockquote>\n" +
+            render_html_by_name_and_value('p', $1).gsub("\n", '<br>') + "\n" +
+            "</blockquote>\n"
         else
           @children ||= Parser.parse_value(@source, options)
           render_html_by_name_and_childlen('p', @children, options) + "\n"
@@ -199,7 +200,9 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        "<blockquote>\n#{CGI.escapeHTML @value}\n</blockquote>\n"
+        "<blockquote>\n" +
+          render_html_by_name_and_value('p', @value).gsub("\n", '<br>') + "\n" +
+          "</blockquote>\n"
       end
     end
 
