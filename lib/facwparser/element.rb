@@ -20,8 +20,8 @@ module Facwparser
         raise "TODO: render_html is not implemented: " + self.class.to_s + "\n"
       end
       private
-      def render_html_by_name_and_value(name, value)
-        "<#{CGI.escapeHTML name}>#{CGI.escapeHTML value}</#{CGI.escapeHTML name}>"
+      def render_html_by_name_and_value(name, value, element_join_char = '')
+        ["<#{CGI.escapeHTML name}>", CGI.escapeHTML(value), "</#{CGI.escapeHTML name}>"].join(element_join_char)
       end
       def render_html_by_name_and_childlen(name, children, options, childlen_join_char = '', element_join_char = '')
         ["<#{CGI.escapeHTML name}>", children.map {|c| c.render_html(options) }.join(childlen_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
@@ -181,7 +181,7 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        "<pre>\n#{CGI.escapeHTML @value}\n</pre>\n"
+        render_html_by_name_and_value('pre', @value, "\n") + "\n"
       end
     end
     class CodeMacro < MacroBase
@@ -191,7 +191,9 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        "<code class=\"code_#{CGI.escapeHTML(@options[1..-1])}\"><pre>\n#{CGI.escapeHTML @value}\n</pre></code>\n"
+        "<code class=\"#{CGI.escapeHTML(@options[1..-1])}\">\n" +
+          render_html_by_name_and_value('pre', @value, "\n") + "\n" +
+          "</code>"
       end
     end
     class QuoteMacro < MacroBase
