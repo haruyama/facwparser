@@ -150,7 +150,7 @@ module Facwparser
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| '<td>' + Parser.parse_value(e, options).map { |c| c.render_html(options) }.join(" ") + '</td>'}.join() +
+          @elements.map { |e| render_html_by_name_and_childlen('td', Parser.parse_value(e, options), options) }.join() +
         "</tr>"
       end
     end
