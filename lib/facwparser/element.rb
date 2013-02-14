@@ -191,9 +191,9 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        "<code class=\"#{CGI.escapeHTML(@options[1..-1])}\">\n" +
-          render_html_by_name_and_value('pre', @value, "\n") + "\n" +
-          "</code>"
+        "<pre class=\"#{CGI.escapeHTML(@options[1..-1])}\">\n" +
+          render_html_by_name_and_value('code', @value, "\n") + "\n" +
+          "</pre>"
       end
     end
     class QuoteMacro < MacroBase
