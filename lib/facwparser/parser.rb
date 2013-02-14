@@ -152,7 +152,7 @@ module Facwparser
           when s.scan(/\?\?(.+?)(?<!\\)\?\?/)
             children << Element::Q.new(s[0], unescape_text(s[1]))
           when s.scan(/\{\{(.+?)(?<!\\)\}\}/)
-            children << Element::TT.new(s[0], unescape_text(s[1]))
+            children << Element::Monospace.new(s[0], unescape_text(s[1]))
           when s.scan(/\!(https?:(?:.+?))(?<!\\)\!/)
             children << Element::Image.new(s[0], unescape_text(s[1]))
           when s.scan(/\{jira:(.+?)(?<!\\)\}/)
