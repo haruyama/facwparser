@@ -98,10 +98,10 @@ module Facwparser
         self
       end
       def render_html(options)
-        "<table><thead>\n" + @children[0].render_html(options) +
-        "\n</thead>\n<tbody>\n" +
-        @children.drop(1).map{|c| c.render_html(options)}.join("\n") +
-        "\n</tbody></table>\n"
+        "<table>\n" +
+        render_html_by_name_and_childlen('thead', @children.take(1), options, "\n", "\n") + "\n" +
+        render_html_by_name_and_childlen('tbody', @children.drop(1), options, "\n", "\n") + "\n" +
+        "</table>\n"
       end
     end
     class TableHeaders < ElementBase
