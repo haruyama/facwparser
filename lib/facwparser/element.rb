@@ -23,8 +23,8 @@ module Facwparser
       def render_html_by_name_and_value(name, value)
         "<#{CGI.escapeHTML name}>#{CGI.escapeHTML value}</#{CGI.escapeHTML name}>"
       end
-      def render_html_by_name_and_childlen(name, childlen, options, childlen_join_char = '', element_join_char = '')
-        ["<#{CGI.escapeHTML name}>", @children.map {|c| c.render_html(options) }.join(childlen_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
+      def render_html_by_name_and_childlen(name, children, options, childlen_join_char = '', element_join_char = '')
+        ["<#{CGI.escapeHTML name}>", children.map {|c| c.render_html(options) }.join(childlen_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
       end
     end
 
@@ -108,11 +108,11 @@ module Facwparser
       attr_reader :elements
       def initialize(source)
         super(source)
-        @elements = source.split('||')[1..-2]
+        @elements = source[2..-3].split('||')
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| '<th>' + Parser.parse_value(e, options).map { |c| c.render_html(options) }.join(" ") + '</th>'}.join() +
+          @elements.map { |e| render_html_by_name_and_childlen('th', Parser.parse_value(e, options), options) }.join() +
         "</tr>"
       end
     end
