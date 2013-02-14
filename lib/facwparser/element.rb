@@ -231,21 +231,23 @@ module Facwparser
       end
     end
 
-    class Bold < InlineElementBase
+    class Strong < InlineElementBase
       def render_html(options)
-        render_html_by_name_and_value('b', @text)
+        render_html_by_name_and_value('strong', @text)
       end
     end
 
-    class Italic < InlineElementBase
+    class Emphasis < InlineElementBase
       def render_html(options)
-        render_html_by_name_and_value('i', @text)
+        render_html_by_name_and_value('em', @text)
       end
     end
 
     class Strike < InlineElementBase
       def render_html(options)
-        render_html_by_name_and_value('s', @text)
+        '<span style="text-decoration: line-through;">' +
+          CGI.escapeHTML(@text) +
+          '</span>'
       end
     end
 
@@ -273,9 +275,9 @@ module Facwparser
       end
     end
 
-    class TT < InlineElementBase
+    class Monospace < InlineElementBase
       def render_html(options)
-        render_html_by_name_and_value('tt', @text)
+        render_html_by_name_and_value('code', @text)
       end
     end
 
@@ -304,7 +306,7 @@ module Facwparser
         @options = options
       end
       def render_html(options)
-        return '<font color="' + CGI.escapeHTML(@options) +'">'
+        return '<span style="color: ' + CGI.escapeHTML(@options) +'">'
       end
     end
 
@@ -313,7 +315,7 @@ module Facwparser
         super(source)
       end
       def render_html(options)
-        return '</font>'
+        return '</span>'
       end
     end
 

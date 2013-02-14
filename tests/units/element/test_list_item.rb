@@ -13,7 +13,7 @@ class TestListItem < Test::Unit::TestCase
 
   def test_list_item_2
     li = Facwparser::Element::ListItem.new('## hoge*nyo*', '##', 'hoge*nyo*')
-    assert_equal(%Q{<li>hoge<b>nyo</b></li>},
+    assert_equal(%Q{<li>hoge<strong>nyo</strong></li>},
                  li.render_html({}))
   end
 end

@@ -31,18 +31,18 @@ class TestParseValue < Test::Unit::TestCase
       ], Facwparser::Parser.parse_value('[株式会社ミクシィ|https://mixi.co.jp/]', {}))
   end
 
-  def test_parse_value_bold
+  def test_parse_value_strong
       assert_equal([
         Facwparser::Element::Text.new('1', '1'),
-        Facwparser::Element::Bold.new('*hoge*', 'hoge'),
+        Facwparser::Element::Strong.new('*hoge*', 'hoge'),
         Facwparser::Element::Text.new('2', '2')
     ], Facwparser::Parser.parse_value('1*hoge*2', {}))
   end
 
-  def test_parse_value_italic
+  def test_parse_value_emphasis
       assert_equal([
         Facwparser::Element::Text.new('1', '1'),
-        Facwparser::Element::Italic.new('_hoge_', 'hoge'),
+        Facwparser::Element::Emphasis.new('_hoge_', 'hoge'),
         Facwparser::Element::Text.new('2', '2')
     ], Facwparser::Parser.parse_value('1_hoge_2', {}))
   end
