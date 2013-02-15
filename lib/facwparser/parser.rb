@@ -12,7 +12,6 @@ module Facwparser
     end
 
     def self.process_elements(elements, options)
-      # TODO toc
       processed = add_list_elements(elements, options)
       processed = add_table_elements(processed, options)
       processed = add_toc(processed, options)
