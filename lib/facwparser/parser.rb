@@ -14,7 +14,20 @@ module Facwparser
     def self.process_elements(elements, options)
       # TODO toc
       processed = add_list_elements(elements, options)
-      add_table_elements(processed, options)
+      processed = add_table_elements(processed, options)
+      processed = add_toc(processed, options)
+      processed
+    end
+
+    def self.add_toc(elements, options)
+      tocs = elements.select{ |e| e.class == Element::TocMacro}
+      if !tocs.empty?
+        headings = elements.select{ |e| e.class == Element::Heading && e.level == 1}
+        id = 0
+        headings.each { |h| h.id = 'heading_' + id.to_s}
+        tocs.each {|t| t.headings = headings }
+      end
+      elements
     end
 
     def self.add_list_elements(elements, options)
@@ -90,9 +103,6 @@ module Facwparser
         when s.scan(/\{toc(:.*)?\} *\n/)
           p = nil
           elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
-        when s.scan(/\{pagetree(:.*)?\} *\n/)
-          p = nil
-          elements << Element::PagetreeMacro.new(s[0], s[1] ? s[1][1,] : nil)
         when s.scan(/\{noformat\} *\n(?m)(.+?\n)\{noformat\} *\n/)
           p = nil
           elements << Element::NoformatMacro.new(s[0], s[1])
