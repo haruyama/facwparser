@@ -260,9 +260,7 @@ module Facwparser
 
     class Strike < InlineElementBase
       def render_html(options)
-        '<span style="text-decoration: line-through;">' +
-          CGI.escapeHTML(@text) +
-          '</span>'
+        render_html_by_name_and_value(['span', {'style' => 'text-decoration: line-through;'}] , @text)
       end
     end
 
@@ -278,13 +276,13 @@ module Facwparser
       end
     end
 
-    class SUP < InlineElementBase
+    class Sup < InlineElementBase
       def render_html(options)
         render_html_by_name_and_value('sup', @text)
       end
     end
 
-    class SUB < InlineElementBase
+    class Sub < InlineElementBase
       def render_html(options)
         render_html_by_name_and_value('sub', @text)
       end
@@ -341,6 +339,9 @@ module Facwparser
     end
 
     class Br < InlineElementBase
+      def initialize(source)
+        super(source, source)
+      end
       def render_html(options)
         '<br>'
       end

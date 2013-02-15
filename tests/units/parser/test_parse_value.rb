@@ -87,7 +87,7 @@ class TestParseValue < Test::Unit::TestCase
   def test_parse_value_br
       assert_equal([
         Facwparser::Element::Text.new('1', '1'),
-        Facwparser::Element::Br.new("\\\\", "\\\\"),
+        Facwparser::Element::Br.new('\\\\'),
         Facwparser::Element::Text.new('2', '2')
     ], Facwparser::Parser.parse_value("1\\\\2", {}))
   end
