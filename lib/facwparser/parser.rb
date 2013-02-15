@@ -24,7 +24,10 @@ module Facwparser
       if !tocs.empty?
         headings = elements.select{ |e| e.class == Element::Heading && e.level == 1}
         id = 0
-        headings.each { |h| h.id = 'heading_' + id.to_s}
+        headings.each { |h|
+          h.id = 'heading_' + id.to_s
+          id += 1
+        }
         tocs.each {|t| t.headings = headings }
       end
       elements
