@@ -226,7 +226,8 @@ module Facwparser
         elsif @text =~ /\A(?:https?|ftp|file):.+\z/
           return '<a href="' + CGI.escapeHTML(@text) +'">' + CGI.escapeHTML(@text) + '</a>'
         else
-          return '[' + CGI.escapeHTML(@text) + ']'
+          url_prefix = options['url_prefix'] || '/'
+          return '<a href="' + CGI.escapeHTML(url_prefix + @text) +'">' + CGI.escapeHTML(@text) + '</a>'
         end
       end
     end
