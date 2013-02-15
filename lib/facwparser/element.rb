@@ -23,8 +23,8 @@ module Facwparser
       def render_html_by_name_and_value(name, value, element_join_char = '')
         ["<#{CGI.escapeHTML name}>", CGI.escapeHTML(value), "</#{CGI.escapeHTML name}>"].join(element_join_char)
       end
-      def render_html_by_name_and_childlen(name, children, options, childlen_join_char = '', element_join_char = '')
-        ["<#{CGI.escapeHTML name}>", children.map {|c| c.render_html(options) }.join(childlen_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
+      def render_html_by_name_and_children(name, children, options, children_join_char = '', element_join_char = '')
+        ["<#{CGI.escapeHTML name}>", children.map {|c| c.render_html(options) }.join(children_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
       end
     end
 
@@ -39,7 +39,7 @@ module Facwparser
             "</blockquote>\n"
         else
           @children ||= Parser.parse_value(@source, options)
-          render_html_by_name_and_childlen('p', @children, options) + "\n"
+          render_html_by_name_and_children('p', @children, options) + "\n"
         end
       end
     end
@@ -57,7 +57,7 @@ module Facwparser
       end
       def render_html(options)
         @children = Parser.parse_value value, options
-        render_html_by_name_and_childlen("h#{level}", @children, options) + "\n"
+        render_html_by_name_and_children("h#{level}", @children, options) + "\n"
       end
     end
     class List < ElementBase
@@ -72,7 +72,7 @@ module Facwparser
         self
       end
       def render_html(options)
-        (render_html_by_name_and_childlen(@type == '#' ? 'ol' : 'ul', @children, options, "\n", "\n") + "\n").gsub("\n\n", "\n")
+        (render_html_by_name_and_children(@type == '#' ? 'ol' : 'ul', @children, options, "\n", "\n") + "\n").gsub("\n\n", "\n")
       end
     end
     class ListItem < ElementBase
@@ -85,7 +85,7 @@ module Facwparser
       end
       def render_html(options)
         @children ||= Parser.parse_value value, options
-        render_html_by_name_and_childlen('li', @children, options)
+        render_html_by_name_and_children('li', @children, options)
       end
     end
     class Table < ElementBase
@@ -99,8 +99,8 @@ module Facwparser
       end
       def render_html(options)
         "<table>\n" +
-        render_html_by_name_and_childlen('thead', @children.take(1), options, "\n", "\n") + "\n" +
-        render_html_by_name_and_childlen('tbody', @children.drop(1), options, "\n", "\n") + "\n" +
+        render_html_by_name_and_children('thead', @children.take(1), options, "\n", "\n") + "\n" +
+        render_html_by_name_and_children('tbody', @children.drop(1), options, "\n", "\n") + "\n" +
         "</table>\n"
       end
     end
@@ -112,7 +112,7 @@ module Facwparser
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| render_html_by_name_and_childlen('th', Parser.parse_value(e, options), options) }.join() +
+          @elements.map { |e| render_html_by_name_and_children('th', Parser.parse_value(e, options), options) }.join() +
         "</tr>"
       end
     end
@@ -150,7 +150,7 @@ module Facwparser
       end
       def render_html(options)
         "<tr>" +
-          @elements.map { |e| render_html_by_name_and_childlen('td', Parser.parse_value(e, options), options) }.join() +
+          @elements.map { |e| render_html_by_name_and_children('td', Parser.parse_value(e, options), options) }.join() +
         "</tr>"
       end
     end
@@ -226,7 +226,7 @@ module Facwparser
         elsif @text =~ /\A(?:https?|ftp|file):.+\z/
           return '<a href="' + CGI.escapeHTML(@text) +'">' + CGI.escapeHTML(@text) + '</a>'
         else
-          url_prefix = options['url_prefix'] || '/'
+          url_prefix = (options && options['url_prefix']) || '/'
           return '<a href="' + CGI.escapeHTML(url_prefix + @text) +'">' + CGI.escapeHTML(@text) + '</a>'
         end
       end
