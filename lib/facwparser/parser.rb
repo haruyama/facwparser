@@ -168,6 +168,8 @@ module Facwparser
             children << Element::Monospace.new(s[0], unescape_text(s[1]))
           when s.scan(/\!(https?:(?:.+?))(?<!\\)\!/)
             children << Element::Image.new(s[0], unescape_text(s[1]))
+          when s.scan(/\!(\/(?:.+?))(?<!\\)\!/)
+            children << Element::Image.new(s[0], unescape_text(s[1]))
           when s.scan(/\{jira:(.+?)(?<!\\)\}/)
             children << Element::JiraMacro.new(s[0], unescape_text(s[1]))
           when s.scan(/\{color:(.+?)(?<!\\)\}/)
