@@ -138,22 +138,6 @@ EOS
 
   end
 
-  def test_parse1_pagetree
-    source =<<EOS
-1
-{pagetree:root=@self}
-2
-EOS
-    assert_equal(
-      [
-        Facwparser::Element::P.new("1\n"),
-        Facwparser::Element::PagetreeMacro.new("{pagetree:root=@self}\n", 'root=@self'),
-        Facwparser::Element::P.new("2\n"),
-      ],
-      Facwparser::Parser.parse1(source, {}))
-
-  end
-
   def test_parse1_noformat
     source =<<EOS
 1

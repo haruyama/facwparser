@@ -14,7 +14,23 @@ module Facwparser
     def self.process_elements(elements, options)
       # TODO toc
       processed = add_list_elements(elements, options)
-      add_table_elements(processed, options)
+      processed = add_table_elements(processed, options)
+      processed = add_toc(processed, options)
+      processed
+    end
+
+    def self.add_toc(elements, options)
+      tocs = elements.select{ |e| e.class == Element::TocMacro}
+      if !tocs.empty?
+        headings = elements.select{ |e| e.class == Element::Heading && e.level == 1}
+        id = 0
+        headings.each { |h|
+          h.id = 'heading_' + id.to_s
+          id += 1
+        }
+        tocs.each {|t| t.headings = headings }
+      end
+      elements
     end
 
     def self.add_list_elements(elements, options)
@@ -90,9 +106,6 @@ module Facwparser
         when s.scan(/\{toc(:.*)?\} *\n/)
           p = nil
           elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
-        when s.scan(/\{pagetree(:.*)?\} *\n/)
-          p = nil
-          elements << Element::PagetreeMacro.new(s[0], s[1] ? s[1][1,] : nil)
         when s.scan(/\{noformat\} *\n(?m)(.+?\n)\{noformat\} *\n/)
           p = nil
           elements << Element::NoformatMacro.new(s[0], s[1])
@@ -138,9 +151,9 @@ module Facwparser
           when s.scan(/\[(.+?)(?<!\\)\]/)
             children << Element::A.new(s[0], unescape_text(s[1]))
           when s.scan(/\*(.+?)(?<!\\)\*/)
-            children << Element::Bold.new(s[0], unescape_text(s[1]))
+            children << Element::Strong.new(s[0], unescape_text(s[1]))
           when s.scan(/\_(.+?)(?<!\\)\_/)
-            children << Element::Italic.new(s[0], unescape_text(s[1]))
+            children << Element::Emphasis.new(s[0], unescape_text(s[1]))
           when s.scan(/\-(.+?)(?<!\\)\-/)
             children << Element::Strike.new(s[0], unescape_text(s[1]))
           when s.scan(/\+(.+?)(?<!\\)\+/)
@@ -152,8 +165,10 @@ module Facwparser
           when s.scan(/\?\?(.+?)(?<!\\)\?\?/)
             children << Element::Q.new(s[0], unescape_text(s[1]))
           when s.scan(/\{\{(.+?)(?<!\\)\}\}/)
-            children << Element::TT.new(s[0], unescape_text(s[1]))
+            children << Element::Monospace.new(s[0], unescape_text(s[1]))
           when s.scan(/\!(https?:(?:.+?))(?<!\\)\!/)
+            children << Element::Image.new(s[0], unescape_text(s[1]))
+          when s.scan(/\!(\/(?:.+?))(?<!\\)\!/)
             children << Element::Image.new(s[0], unescape_text(s[1]))
           when s.scan(/\{jira:(.+?)(?<!\\)\}/)
             children << Element::JiraMacro.new(s[0], unescape_text(s[1]))
