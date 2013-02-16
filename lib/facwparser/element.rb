@@ -195,7 +195,7 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        render_html_by_name_and_value('pre', @value, "\n") + "\n"
+        render_html_by_name_and_value(['pre', {'class' => 'noformat'}] , @value, "\n") + "\n"
       end
     end
     class CodeMacro < MacroBase
