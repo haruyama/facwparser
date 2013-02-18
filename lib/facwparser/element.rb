@@ -333,7 +333,7 @@ module Facwparser
 
     class Text < InlineElementBase
       def render_html(options)
-        CGI.escapeHTML @source
+        CGI.escapeHTML @text
       end
     end
 
