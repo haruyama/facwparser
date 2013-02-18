@@ -124,9 +124,9 @@ module Facwparser
     end
     class TableHeaders < ElementBase
       attr_reader :elements
-      def initialize(source)
+      def initialize(source, value)
         super(source)
-        @elements = source[2..-3].split('||')
+        @elements = value[2..-3].split('||')
       end
       def render_html(options)
         "<tr>" +
@@ -136,11 +136,11 @@ module Facwparser
     end
     class TableData < ElementBase
       attr_reader :elements
-      def initialize(source)
+      def initialize(source, value)
         super(source)
         @elements = []
         element = ''
-        s = StringScanner.new(source[1..-2])
+        s = StringScanner.new(value[1..-2])
         in_link = false
         while s.rest?
           case
@@ -195,7 +195,7 @@ module Facwparser
         @value = value
       end
       def render_html(options)
-        render_html_by_name_and_value('pre', @value, "\n") + "\n"
+        render_html_by_name_and_value(['pre', {'class' => 'noformat'}] , @value, "\n") + "\n"
       end
     end
     class CodeMacro < MacroBase
@@ -260,9 +260,7 @@ module Facwparser
 
     class Strike < InlineElementBase
       def render_html(options)
-        '<span style="text-decoration: line-through;">' +
-          CGI.escapeHTML(@text) +
-          '</span>'
+        render_html_by_name_and_value(['span', {'style' => 'text-decoration: line-through;'}] , @text)
       end
     end
 
@@ -278,13 +276,13 @@ module Facwparser
       end
     end
 
-    class SUP < InlineElementBase
+    class Sup < InlineElementBase
       def render_html(options)
         render_html_by_name_and_value('sup', @text)
       end
     end
 
-    class SUB < InlineElementBase
+    class Sub < InlineElementBase
       def render_html(options)
         render_html_by_name_and_value('sub', @text)
       end
@@ -341,6 +339,9 @@ module Facwparser
     end
 
     class Br < InlineElementBase
+      def initialize(source)
+        super(source, source)
+      end
       def render_html(options)
         '<br>'
       end

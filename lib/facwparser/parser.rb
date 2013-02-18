@@ -12,7 +12,6 @@ module Facwparser
     end
 
     def self.process_elements(elements, options)
-      # TODO toc
       processed = add_list_elements(elements, options)
       processed = add_table_elements(processed, options)
       processed = add_toc(processed, options)
@@ -97,12 +96,12 @@ module Facwparser
         when s.scan(/([*\-#]+) +(.+)\n/)
           p = nil
           elements << Element::ListItem.new(s[0], s[1], s[2])
-        when s.scan(/\|\|.+\|\| *\n/)
+        when s.scan(/(\|\|.+\|\|) *\n/)
           p = nil
-          elements << Element::TableHeaders.new(s[0])
-        when s.scan(/\|.+\| *\n/)
+          elements << Element::TableHeaders.new(s[0], s[1])
+        when s.scan(/(\|.+\|) *\n/)
           p = nil
-          elements << Element::TableData.new(s[0])
+          elements << Element::TableData.new(s[0], s[1])
         when s.scan(/\{toc(:.*)?\} *\n/)
           p = nil
           elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
@@ -159,9 +158,9 @@ module Facwparser
           when s.scan(/\+(.+?)(?<!\\)\+/)
             children << Element::Under.new(s[0], unescape_text(s[1]))
           when s.scan(/\^(.+?)(?<!\\)\^/)
-            children << Element::SUP.new(s[0], unescape_text(s[1]))
+            children << Element::Sup.new(s[0], unescape_text(s[1]))
           when s.scan(/\~(.+?)(?<!\\)\~/)
-            children << Element::SUB.new(s[0], unescape_text(s[1]))
+            children << Element::Sub.new(s[0], unescape_text(s[1]))
           when s.scan(/\?\?(.+?)(?<!\\)\?\?/)
             children << Element::Q.new(s[0], unescape_text(s[1]))
           when s.scan(/\{\{(.+?)(?<!\\)\}\}/)
@@ -179,7 +178,7 @@ module Facwparser
           when s.scan(/[^\[^\\*_+{!-]+/)
             children << Element::Text.new(s[0], unescape_text(s[0]))
           when s.scan(/\\\\/)
-            children << Element::Br.new(s[0], unescape_text(s[0]))
+            children << Element::Br.new(s[0])
           when s.scan(/\\[\[\]\*+_?{}!^~-]/)
             children << Element::Text.new(s[0], unescape_text(s[0]))
           else
