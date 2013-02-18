@@ -175,7 +175,7 @@ module Facwparser
             children << Element::ColorMacroStart.new(s[0], unescape_text(s[1]))
           when s.scan(/\{color\}/)
             children << Element::ColorMacroEnd.new(s[0])
-          when s.scan(/[^\[^\\*_+{!-]+/)
+          when s.scan(/[^\[\a^\\*+_?{}!-]+/)
             children << Element::Text.new(s[0], unescape_text(s[0]))
           when s.scan(/\\\\/)
             children << Element::Br.new(s[0])
