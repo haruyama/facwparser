@@ -7,7 +7,7 @@ class TestNoformat < Test::Unit::TestCase
 
   def test_noformat_1
     noformat = Facwparser::Element::NoformatMacro.new("{noformat}\n*a*\n{noformat}\n", '*a*')
-    assert_equal(%Q{<pre class="noformat">\n*a*\n</pre>\n},
+    assert_equal(%Q{<pre class="noformat">*a*</pre>\n},
                  noformat.render_html({}))
   end
 
