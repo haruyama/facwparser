@@ -98,8 +98,8 @@ EOS
     assert_equal(
       [
         Facwparser::Element::P.new("1\n"),
-        Facwparser::Element::TableHeaders.new("||2||3||\n"),
-        Facwparser::Element::TableData.new("|4|5|\n"),
+        Facwparser::Element::TableHeaders.new("||2||3||\n", '||2||3||'),
+        Facwparser::Element::TableData.new("|4|5|\n", '|4|5|'),
         Facwparser::Element::P.new("6\n"),
       ],
       Facwparser::Parser.parse1(source, {}))

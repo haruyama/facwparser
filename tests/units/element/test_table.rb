@@ -7,9 +7,9 @@ class TestTable < Test::Unit::TestCase
 
   def test_table_1
     table = Facwparser::Element::Table.new
-    tr = Facwparser::Element::TableHeaders.new('||hoge||kuke||')
-    td1 = Facwparser::Element::TableData.new('|1|2|')
-    td2 = Facwparser::Element::TableData.new('|3|4|')
+    tr = Facwparser::Element::TableHeaders.new("||hoge||kuke||\n", '||hoge||kuke||')
+    td1 = Facwparser::Element::TableData.new("|1|2|\n", '|1|2|')
+    td2 = Facwparser::Element::TableData.new("|3|4|\n", '|3|4|')
     table.push tr
     table.push td1
     table.push td2

@@ -124,9 +124,9 @@ module Facwparser
     end
     class TableHeaders < ElementBase
       attr_reader :elements
-      def initialize(source)
+      def initialize(source, value)
         super(source)
-        @elements = source[2..-3].split('||')
+        @elements = value[2..-3].split('||')
       end
       def render_html(options)
         "<tr>" +
@@ -136,11 +136,11 @@ module Facwparser
     end
     class TableData < ElementBase
       attr_reader :elements
-      def initialize(source)
+      def initialize(source, value)
         super(source)
         @elements = []
         element = ''
-        s = StringScanner.new(source[1..-2])
+        s = StringScanner.new(value[1..-2])
         in_link = false
         while s.rest?
           case

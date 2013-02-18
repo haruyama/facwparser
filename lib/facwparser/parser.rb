@@ -96,12 +96,12 @@ module Facwparser
         when s.scan(/([*\-#]+) +(.+)\n/)
           p = nil
           elements << Element::ListItem.new(s[0], s[1], s[2])
-        when s.scan(/\|\|.+\|\| *\n/)
+        when s.scan(/(\|\|.+\|\|) *\n/)
           p = nil
-          elements << Element::TableHeaders.new(s[0])
-        when s.scan(/\|.+\| *\n/)
+          elements << Element::TableHeaders.new(s[0], s[1])
+        when s.scan(/(\|.+\|) *\n/)
           p = nil
-          elements << Element::TableData.new(s[0])
+          elements << Element::TableData.new(s[0], s[1])
         when s.scan(/\{toc(:.*)?\} *\n/)
           p = nil
           elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
