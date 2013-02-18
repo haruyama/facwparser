@@ -118,6 +118,10 @@ class TestParseValue < Test::Unit::TestCase
         Facwparser::Element::JiraMacro.new('{jira:SYSTEMRD\-1}', 'SYSTEMRD-1'),
     ], Facwparser::Parser.parse_value('1\\{{jira:SYSTEMRD\\-1}', {}))
 
+    assert_equal([
+                 Facwparser::Element::Text.new('\\-', '-'),
+    ], Facwparser::Parser.parse_value('\\-', {}))
+
   end
 
 end
