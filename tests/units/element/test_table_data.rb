@@ -16,5 +16,11 @@ class TestTableData < Test::Unit::TestCase
     assert_equal(%Q{<tr><td>hoge</td><td><a href="http://www.unixuser.org">hoge</a></td></tr>},
                  td.render_html({}))
   end
+
+  def test_table_data_3
+    td = Facwparser::Element::TableData.new("|hoge||\n", '|hoge||')
+    assert_equal(%Q{<tr><td>hoge</td><td></td></tr>},
+                 td.render_html({}))
+  end
 end
 
