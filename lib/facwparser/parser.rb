@@ -65,7 +65,7 @@ module Facwparser
       elements.each { |e|
         case
         when e.class == Element::TableHeaders || e.class == Element::TableData
-          if !table || e.class == Element::TableHeaders
+          if !table && e.class == Element::TableHeaders
             table = Element::Table.new
             processed << table
           end
