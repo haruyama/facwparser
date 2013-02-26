@@ -307,7 +307,7 @@ module Facwparser
       end
       def render_html(options)
         jira_browse_url = (options && options['jira_browse_url']) || ''
-        return '<a href="' + CGI.escapeHTML(jira_browse_url + @options) +'">' + CGI.escapeHTML(@options) + '</a>'
+        render_html_by_name_and_value(['a', {'href' => jira_browse_url + @options}], @options)
       end
     end
 
