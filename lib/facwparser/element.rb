@@ -140,7 +140,7 @@ module Facwparser
         super(source)
         @elements = []
         element = ''
-        s = StringScanner.new(value[1..-2])
+        s = StringScanner.new(value[1..-1])
         in_link = false
         while s.rest?
           case
