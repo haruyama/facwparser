@@ -17,8 +17,11 @@ EOS
     assert_equal(
       [
         Facwparser::Element::P.new("ほげ\n"),
+        Facwparser::Element::Nop.new("\n"),
         Facwparser::Element::P.new("ほげほげ\n"),
+        Facwparser::Element::Nop.new("\n"),
         Facwparser::Element::P.new("ほげほげげほ\nにゃ\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -35,9 +38,11 @@ EOS
     assert_equal(
       [
         Facwparser::Element::Heading.new("h1. ほげ\n", 1, "ほげ"),
+        Facwparser::Element::Nop.new("\n"),
         Facwparser::Element::P.new("ほげほげ\n"),
         Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, "ほげほげげほ"),
         Facwparser::Element::P.new("にゃ\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -59,8 +64,10 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::HorizontalRule.new("----\n"),
         Facwparser::Element::P.new("2\n---\n3\n"),
+        Facwparser::Element::Nop.new("\n"),
         Facwparser::Element::HorizontalRule.new("-----\n"),
         Facwparser::Element::P.new("4\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -83,6 +90,7 @@ EOS
         Facwparser::Element::ListItem.new("** 4\n", '**', '4'),
         Facwparser::Element::ListItem.new("### 5\n", '###', '5'),
         Facwparser::Element::ListItem.new("#*#* 6\n", '#*#*', '6'),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -101,6 +109,7 @@ EOS
         Facwparser::Element::TableHeaders.new("||2||3||\n", '||2||3||'),
         Facwparser::Element::TableData.new("|4|5|\n", '|4|5|'),
         Facwparser::Element::P.new("6\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -117,6 +126,7 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::TocMacro.new("{toc}\n"),
         Facwparser::Element::P.new("2\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -133,6 +143,7 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::TocMacro.new("{toc:maxLevel=3}\n", 'maxLevel=3'),
         Facwparser::Element::P.new("2\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -152,6 +163,7 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::NoformatMacro.new("{noformat}\n2\n3\n{noformat}\n", "2\n3\n"),
         Facwparser::Element::P.new("4\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -171,6 +183,7 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::CodeMacro.new("{code:ruby}\na = 1 + 2\n3\n{code}\n", 'ruby', "a = 1 + 2\n3\n"),
         Facwparser::Element::P.new("4\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 
@@ -190,6 +203,7 @@ EOS
         Facwparser::Element::P.new("1\n"),
         Facwparser::Element::QuoteMacro.new("{quote}\n2\n3\n{quote}\n", "2\n3\n"),
         Facwparser::Element::P.new("4\n"),
+        Facwparser::Element::Nop.new("\n"),
       ],
       Facwparser::Parser.parse1(source, {}))
 

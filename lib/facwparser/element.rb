@@ -220,6 +220,11 @@ module Facwparser
           "</blockquote>\n"
       end
     end
+    class Nop < MacroBase
+      def render_html(options)
+        "\n"
+      end
+    end
 
     class InlineElementBase < ElementBase
       attr_reader :text

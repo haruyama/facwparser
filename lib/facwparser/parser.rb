@@ -116,6 +116,7 @@ module Facwparser
           elements << Element::QuoteMacro.new(s[0], s[1])
         when s.scan(/ *\n/)
           p = nil
+          elements << Element::Nop.new(s[0])
         when s.scan(/(.+)\n/)
           if p
             p.append(s[0])
