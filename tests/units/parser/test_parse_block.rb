@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/../../../lib/facwparser/parser'
 
 class TestParse1 < Test::Unit::TestCase
 
-  def test_parse1_p
+  def test_parse_block_p
     source =<<EOS
 ほげ
 
@@ -23,11 +23,11 @@ EOS
         Facwparser::Element::P.new("ほげほげげほ\nにゃ\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_heading
+  def test_parse_block_heading
     source =<<EOS
 h1. ほげ
 
@@ -44,11 +44,11 @@ EOS
         Facwparser::Element::P.new("にゃ\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_horizontal_rule
+  def test_parse_block_horizontal_rule
     source =<<EOS
 1
 ----
@@ -69,11 +69,11 @@ EOS
         Facwparser::Element::P.new("4\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_list_item
+  def test_parse_block_list_item
     source =<<EOS
 1
 - 2
@@ -92,11 +92,11 @@ EOS
         Facwparser::Element::ListItem.new("#*#* 6\n", '#*#*', '6'),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_table
+  def test_parse_block_table
     source =<<EOS
 1
 ||2||3||
@@ -111,11 +111,11 @@ EOS
         Facwparser::Element::P.new("6\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_toc_1
+  def test_parse_block_toc_1
     source =<<EOS
 1
 {toc}
@@ -128,11 +128,11 @@ EOS
         Facwparser::Element::P.new("2\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_toc_2
+  def test_parse_block_toc_2
     source =<<EOS
 1
 {toc:maxLevel=3}
@@ -145,11 +145,11 @@ EOS
         Facwparser::Element::P.new("2\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_noformat
+  def test_parse_block_noformat
     source =<<EOS
 1
 {noformat}
@@ -165,11 +165,11 @@ EOS
         Facwparser::Element::P.new("4\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_code
+  def test_parse_block_code
     source =<<EOS
 1
 {code:ruby}
@@ -185,11 +185,11 @@ EOS
         Facwparser::Element::P.new("4\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
-  def test_parse1_quote
+  def test_parse_block_quote
     source =<<EOS
 1
 {quote}
@@ -205,7 +205,7 @@ EOS
         Facwparser::Element::P.new("4\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
-      Facwparser::Parser.parse1(source, {}))
+      Facwparser::Parser.parse_block(source, {}))
 
   end
 
