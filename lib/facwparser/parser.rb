@@ -7,18 +7,18 @@ require File.dirname(__FILE__) + '/element'
 module Facwparser
   module Parser
     def self.parse(content, options = {})
-      elements = parse1(content, options)
+      elements = parse_block(content, options)
       process_elements(elements, options)
     end
 
     def self.process_elements(elements, options)
       processed = add_list_elements(elements, options)
       processed = add_table_elements(processed, options)
-      processed = add_toc(processed, options)
+      processed = add_headings_to_toc(processed, options)
       processed
     end
 
-    def self.add_toc(elements, options)
+    def self.add_headings_to_toc(elements, options)
       tocs = elements.select{ |e| e.class == Element::TocMacro}
       if !tocs.empty?
         headings = elements.select{ |e| e.class == Element::Heading && e.level == 1}
@@ -63,9 +63,8 @@ module Facwparser
       processed = []
       table = nil
       elements.each { |e|
-        case
-        when e.class == Element::TableHeaders || e.class == Element::TableData
-          if e.class == Element::TableHeaders || !table
+        if e.is_a?(Element::TableRow)
+          if e.is_a?(Element::TableHeaders) || !table
             table = Element::Table.new
             processed << table
           end
@@ -78,7 +77,7 @@ module Facwparser
       processed
     end
 
-    def self.parse1(content, options)
+    def self.parse_block(content, options)
       s = StringScanner.new(content.gsub("\r", '').gsub(/[\t\f]/, ' ') + "\n")
 
       elements = []
@@ -116,6 +115,7 @@ module Facwparser
           elements << Element::QuoteMacro.new(s[0], s[1])
         when s.scan(/ *\n/)
           p = nil
+          elements << Element::Nop.new(s[0])
         when s.scan(/(.+)\n/)
           if p
             p.append(s[0])

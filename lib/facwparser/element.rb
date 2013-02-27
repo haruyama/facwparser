@@ -122,7 +122,9 @@ module Facwparser
           "</table>\n"
       end
     end
-    class TableHeaders < ElementBase
+    class TableRow < ElementBase
+    end
+    class TableHeaders < TableRow
       attr_reader :elements
       def initialize(source, value)
         super(source)
@@ -134,7 +136,7 @@ module Facwparser
           "</tr>"
       end
     end
-    class TableData < ElementBase
+    class TableData < TableRow
       attr_reader :elements
       def initialize(source, value)
         super(source)
@@ -218,6 +220,11 @@ module Facwparser
         "<blockquote>\n" +
           render_html_by_name_and_value('p', @value).gsub("\n", '<br>') + "\n" +
           "</blockquote>\n"
+      end
+    end
+    class Nop < MacroBase
+      def render_html(options)
+        "\n"
       end
     end
 
@@ -307,7 +314,7 @@ module Facwparser
       end
       def render_html(options)
         jira_browse_url = (options && options['jira_browse_url']) || ''
-        return '<a href="' + CGI.escapeHTML(jira_browse_url + @options) +'">' + CGI.escapeHTML(@options) + '</a>'
+        render_html_by_name_and_value(['a', {'href' => jira_browse_url + @options}], @options)
       end
     end
 
