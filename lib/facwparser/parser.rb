@@ -63,9 +63,8 @@ module Facwparser
       processed = []
       table = nil
       elements.each { |e|
-        case
-        when e.class == Element::TableHeaders || e.class == Element::TableData
-          if e.class == Element::TableHeaders || !table
+        if e.is_a?(Element::TableRow)
+          if e.is_a?(Element::TableHeaders) || !table
             table = Element::Table.new
             processed << table
           end

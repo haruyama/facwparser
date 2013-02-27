@@ -122,7 +122,9 @@ module Facwparser
           "</table>\n"
       end
     end
-    class TableHeaders < ElementBase
+    class TableRow < ElementBase
+    end
+    class TableHeaders < TableRow
       attr_reader :elements
       def initialize(source, value)
         super(source)
@@ -134,7 +136,7 @@ module Facwparser
           "</tr>"
       end
     end
-    class TableData < ElementBase
+    class TableData < TableRow
       attr_reader :elements
       def initialize(source, value)
         super(source)
