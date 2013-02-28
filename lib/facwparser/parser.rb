@@ -19,9 +19,9 @@ module Facwparser
     end
 
     def self.add_headings_to_toc(elements, options)
-      tocs = elements.select{ |e| e.class == Element::TocMacro}
+      tocs = elements.select{ |e| e.is_a?(Element::TocMacro)}
       if !tocs.empty?
-        headings = elements.select{ |e| e.class == Element::Heading && e.level == 1}
+        headings = elements.select{ |e| e.is_a?(Element::Heading) && e.level == 1}
         id = 0
         headings.each { |h|
           h.id = 'heading_' + id.to_s
