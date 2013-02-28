@@ -37,7 +37,7 @@ module Facwparser
       list_stack = []
       elements.each { |e|
         case
-        when e.class == Element::ListItem
+        when e.is_a?(Element::ListItem)
           while list_stack.size > e.level
             list_stack.pop
           end
