@@ -6,6 +6,9 @@ require File.dirname(__FILE__) + '/element'
 
 module Facwparser
   module Parser
+
+    SPECIAL_CHARACTERS_REGEX = %w( [ ] \\ * + _ ? { } ! ^ ~ - ).map{|e| Regexp.escape(e)}.join
+
     def self.parse(content, options = {})
       elements = parse_block(content, options)
       process_elements(elements, options)
@@ -131,15 +134,12 @@ module Facwparser
     end
 
     def self.unescape_text(text)
-      text.gsub(/\\([\[\]\*+_?{}!^~-])/) {
+      text.gsub(/\\([#{SPECIAL_CHARACTERS_REGEX}])/o) {
         $1
       }
     end
 
     def self.parse_value(value, options)
-
-      #jira
-      #img
 
       children = []
 
@@ -175,11 +175,11 @@ module Facwparser
             children << Element::ColorMacroStart.new(s[0], unescape_text(s[1]))
           when s.scan(/\{color\}/)
             children << Element::ColorMacroEnd.new(s[0])
-          when s.scan(/[^\[\a^\\*+_?{}!-]+/)
-            children << Element::Text.new(s[0], unescape_text(s[0]))
           when s.scan(/\\\\/)
             children << Element::Br.new(s[0])
-          when s.scan(/\\[\[\]\*+_?{}!^~-]/)
+          when s.scan(/\\([#{SPECIAL_CHARACTERS_REGEX}])/o)
+            children << Element::Text.new(s[0], s[1])
+          when s.scan(/[^#{SPECIAL_CHARACTERS_REGEX}]+/o)
             children << Element::Text.new(s[0], unescape_text(s[0]))
           else
             children << Element::Text.new(s.rest, unescape_text(s.rest))
