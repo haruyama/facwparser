@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require File.dirname(__FILE__) + '/../../../lib/facwparser/parser'
 
+require_relative '../../../lib/facwparser/parser'
 
 class TestParseValue < Test::Unit::TestCase
 
