@@ -6,7 +6,7 @@ require_relative '../../../lib/facwparser/parser'
 class TestParse1 < Test::Unit::TestCase
 
   def test_parse_block_p
-    source =<<EOS
+    source = <<EOS
 ほげ
 
 ほげほげ
@@ -28,7 +28,7 @@ EOS
   end
 
   def test_parse_block_heading
-    source =<<EOS
+    source = <<EOS
 h1. ほげ
 
 ほげほげ
@@ -37,10 +37,10 @@ h3.  ほげほげげほ
 EOS
     assert_equal(
       [
-        Facwparser::Element::Heading.new("h1. ほげ\n", 1, "ほげ"),
+        Facwparser::Element::Heading.new("h1. ほげ\n", 1, 'ほげ'),
         Facwparser::Element::Nop.new("\n"),
         Facwparser::Element::P.new("ほげほげ\n"),
-        Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, "ほげほげげほ"),
+        Facwparser::Element::Heading.new("h3.  ほげほげげほ\n", 3, 'ほげほげげほ'),
         Facwparser::Element::P.new("にゃ\n"),
         Facwparser::Element::Nop.new("\n"),
       ],
@@ -49,7 +49,7 @@ EOS
   end
 
   def test_parse_block_horizontal_rule
-    source =<<EOS
+    source = <<EOS
 1
 ----
 2
@@ -74,7 +74,7 @@ EOS
   end
 
   def test_parse_block_list_item
-    source =<<EOS
+    source = <<EOS
 1
 - 2
 3
@@ -97,7 +97,7 @@ EOS
   end
 
   def test_parse_block_table
-    source =<<EOS
+    source = <<EOS
 1
 ||2||3||
 |4|5|
@@ -116,7 +116,7 @@ EOS
   end
 
   def test_parse_block_toc_1
-    source =<<EOS
+    source = <<EOS
 1
 {toc}
 2
@@ -133,7 +133,7 @@ EOS
   end
 
   def test_parse_block_toc_2
-    source =<<EOS
+    source = <<EOS
 1
 {toc:maxLevel=3}
 2
@@ -150,7 +150,7 @@ EOS
   end
 
   def test_parse_block_noformat
-    source =<<EOS
+    source = <<EOS
 1
 {noformat}
 2
@@ -170,7 +170,7 @@ EOS
   end
 
   def test_parse_block_code
-    source =<<EOS
+    source = <<EOS
 1
 {code:ruby}
 a = 1 + 2
@@ -190,7 +190,7 @@ EOS
   end
 
   def test_parse_block_quote
-    source =<<EOS
+    source = <<EOS
 1
 {quote}
 2

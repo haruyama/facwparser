@@ -6,7 +6,7 @@ require_relative '../../../lib/facwparser/parser'
 class TestAddHeadingsToToc < Test::Unit::TestCase
 
   def test_add_headings_to_toc_1
-    toc = Facwparser::Element::TocMacro.new('{toc}');
+    toc = Facwparser::Element::TocMacro.new('{toc}')
     pre = [
       toc,
       Facwparser::Element::Heading.new('h1. hoge', 1, 'hoge'),

@@ -34,6 +34,7 @@ class TestHeading < Test::Unit::TestCase
     assert_equal(%Q{hoge http://www.unixuser.org},
                  heading.render_text({}))
   end
+
   def test_heading_5
     heading = Facwparser::Element::Heading.new('h1. hoge[http://www.unixuser.org]', 1, 'hoge[http://www.unixuser.org]')
     heading.id = 'heading_0'

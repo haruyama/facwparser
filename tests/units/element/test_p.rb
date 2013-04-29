@@ -25,7 +25,7 @@ class TestP < Test::Unit::TestCase
   end
 
   def test_p_4
-    p = Facwparser::Element::P.new("<>")
+    p = Facwparser::Element::P.new('<>')
     assert_equal("<p>&lt;&gt;</p>\n",
                  p.render_html({}))
   end

@@ -7,7 +7,7 @@ require_relative 'element'
 module Facwparser
   module Parser
 
-    SPECIAL_CHARACTERS_REGEX = %w( [ ] \\ * + _ ? { } ! ^ ~ - ).map{|e| Regexp.escape(e)}.join
+    SPECIAL_CHARACTERS_REGEX = %w( [ ] \\ * + _ ? { } ! ^ ~ - ).map { |e| Regexp.escape(e) }.join
 
     def self.parse(content, options = {})
       elements = parse_block(content, options)
@@ -22,15 +22,15 @@ module Facwparser
     end
 
     def self.add_headings_to_toc(elements, options)
-      tocs = elements.select{ |e| e.is_a?(Element::TocMacro)}
-      if !tocs.empty?
-        headings = elements.select{ |e| e.is_a?(Element::Heading) && e.level == 1}
+      tocs = elements.select { |e| e.is_a?(Element::TocMacro) }
+      unless tocs.empty?
+        headings = elements.select { |e| e.is_a?(Element::Heading) && e.level == 1 }
         id = 0
         headings.each { |h|
           h.id = 'heading_' + id.to_s
           id += 1
         }
-        tocs.each {|t| t.headings = headings }
+        tocs.each { |t| t.headings = headings }
       end
       elements
     end
@@ -41,9 +41,7 @@ module Facwparser
       elements.each { |e|
         case
         when e.is_a?(Element::ListItem)
-          while list_stack.size > e.level
-            list_stack.pop
-          end
+          list_stack.pop while list_stack.size > e.level
           while list_stack.size < e.level
             list = Element::List.new(e.symbols[list_stack.size])
             if list_stack.empty?
@@ -86,7 +84,6 @@ module Facwparser
       elements = []
 
       p = nil
-
       while s.rest?
         case
         when s.scan(/h(\d)\. +(.+)\n/)
@@ -106,7 +103,7 @@ module Facwparser
           elements << Element::TableData.new(s[0], s[1])
         when s.scan(/\{toc(:.*)?\} *\n/)
           p = nil
-          elements << Element::TocMacro.new(s[0], s[1] ? s[1][1,] : nil)
+          elements << Element::TocMacro.new(s[0], s[1] ? s[1].slice(1) : nil)
         when s.scan(/\{noformat\} *\n(?m)(.+?\n)\{noformat\} *\n/)
           p = nil
           elements << Element::NoformatMacro.new(s[0], s[1])
