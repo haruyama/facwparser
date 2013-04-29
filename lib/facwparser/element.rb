@@ -5,9 +5,12 @@ require_relative 'parser'
 
 
 module Facwparser
+
   module Element
+
     class ElementBase
       attr_reader :source, :children
+
       def initialize(source)
         @source   = source
         @children = nil
@@ -26,6 +29,7 @@ module Facwparser
       end
 
       private
+
       def render_html_by_name_and_value(name, value, element_join_char = '')
         if name.is_a? Array
           ["<#{CGI.escapeHTML name[0]} " + name[1].map { |k, v| CGI.escapeHTML(k) + '="' + CGI.escapeHTML(v) + '"' + ">" }.join(' '), CGI.escapeHTML(value), "</#{CGI.escapeHTML name[0]}>"].join(element_join_char)
@@ -42,10 +46,10 @@ module Facwparser
           ["<#{CGI.escapeHTML name}>", children.map { |c| c.render_html(options) }.join(children_join_char), "</#{CGI.escapeHTML name}>"].join(element_join_char)
         end
       end
+
     end
 
     class P < ElementBase
-
       def append(source)
         @source += source
       end
@@ -61,11 +65,13 @@ module Facwparser
         end
       end
     end
+
     class HorizontalRule < ElementBase
       def render_html(options)
         "<hr>\n"
       end
     end
+
     class Heading < ElementBase
       attr_reader :level, :value
       attr_accessor :id
@@ -87,7 +93,6 @@ module Facwparser
     end
 
     class List < ElementBase
-
       attr_reader :type
 
       def initialize(type)
@@ -107,7 +112,6 @@ module Facwparser
     end
 
     class ListItem < ElementBase
-
       attr_reader :symbols, :level, :value
 
       def initialize(source, symbols, value)
@@ -124,7 +128,6 @@ module Facwparser
     end
 
     class Table < ElementBase
-
       def initialize
         super('')
       end
@@ -142,10 +145,11 @@ module Facwparser
           "</table>\n"
       end
     end
+
     class TableRow < ElementBase
     end
-    class TableHeaders < TableRow
 
+    class TableHeaders < TableRow
       attr_reader :elements
 
       def initialize(source, value)
@@ -160,8 +164,8 @@ module Facwparser
       end
 
     end
-    class TableData < TableRow
 
+    class TableData < TableRow
       attr_reader :elements
 
       def initialize(source, value)
@@ -227,8 +231,8 @@ module Facwparser
               "\n</ul>\n"
       end
     end
-    class NoformatMacro < MacroBase
 
+    class NoformatMacro < MacroBase
       def initialize(source, value)
         super(source)
         @value = value
@@ -241,7 +245,6 @@ module Facwparser
     end
 
     class CodeMacro < MacroBase
-
       def initialize(source, options, value)
         super(source)
         @options = options
@@ -256,7 +259,6 @@ module Facwparser
     end
 
     class QuoteMacro < MacroBase
-
       def initialize(source, value)
         super(source)
         @value = value
@@ -267,8 +269,8 @@ module Facwparser
           render_html_by_name_and_value('p', @value).gsub("\n", '<br>') + "\n" +
           "</blockquote>\n"
       end
-
     end
+
     class Nop < MacroBase
       def render_html(options)
         "\n"
@@ -276,7 +278,6 @@ module Facwparser
     end
 
     class InlineElementBase < ElementBase
-
       attr_reader :text
 
       def initialize(source, text)
@@ -287,11 +288,9 @@ module Facwparser
       def ==(other)
         super(other) && self.text == other.text
       end
-
     end
 
     class A < InlineElementBase
-
       def render_html(options)
         if match_data = /\A(.+)\|((?:https?|ftp|file):.+)\z/.match(@text)
           return '<a href="' + CGI.escapeHTML(match_data[2]) + '">' + CGI.escapeHTML(match_data[1]) + '</a>'
@@ -389,7 +388,6 @@ module Facwparser
     end
 
     class ColorMacroEnd < MacroBase
-
       def initialize(source)
         super(source)
       end
@@ -397,7 +395,6 @@ module Facwparser
       def render_html(options)
         return '</span>'
       end
-
     end
 
     class Text < InlineElementBase
@@ -405,11 +402,9 @@ module Facwparser
       def render_html(options)
         CGI.escapeHTML @text
       end
-
     end
 
     class Br < InlineElementBase
-
       def initialize(source)
         super(source, source)
       end
@@ -417,8 +412,6 @@ module Facwparser
       def render_html(options)
         '<br>'
       end
-
     end
-
   end
 end
