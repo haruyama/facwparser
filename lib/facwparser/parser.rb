@@ -2,7 +2,7 @@
 
 require 'strscan'
 
-require File.dirname(__FILE__) + '/element'
+require_relative 'element'
 
 module Facwparser
   module Parser

@@ -1,7 +1,7 @@
-#!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require File.dirname(__FILE__) + '/../../../lib/facwparser/element'
+
+require_relative '../../../lib/facwparser/element'
 
 class TestBr < Test::Unit::TestCase
 

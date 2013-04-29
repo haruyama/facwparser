@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 require 'cgi'
-require File.dirname(__FILE__) + '/parser'
+require_relative 'parser'
 
 
 module Facwparser
